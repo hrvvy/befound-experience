@@ -331,18 +331,6 @@ section{padding-block:var(--gap)}
 
 /* No film for anyone who asked for less movement. */
 @media (prefers-reduced-motion:reduce){ .hero-media video{display:none} }
-@media (max-width:900px){
-  .hero{min-height:auto;padding-block:clamp(3rem,8vw,4.5rem) 0}
-  .hero-stats-grid{grid-template-columns:repeat(2,1fr);gap:.9rem 0}
-  .hero-stats-grid > div:nth-child(3){padding-inline-start:0;border-left:0}
-  .hero-stats-grid > div:nth-child(-n+2){padding-bottom:.9rem;border-bottom:1px solid rgba(20,43,73,.16)}
-  .hero-media video{object-position:center}
-  .hero-scrim{
-    background:linear-gradient(180deg, rgba(250,239,222,.9) 0%,
-               rgba(250,239,222,.86) 55%, rgba(250,239,222,.97) 100%)
-  }
-}
-
 /* ---------- villain cycle ---------- */
 /* Top-aligned, not centred. Centring two columns of unequal height means
    neither shares an edge with anything, which is what made this read as
@@ -421,12 +409,6 @@ section{padding-block:var(--gap)}
   .ring-lit{display:none}
   .node{border-color:var(--clay)}
 }
-@media (max-width:900px){
-  .villain-grid{grid-template-columns:1fr}
-  .cycle-ring{max-width:23rem}
-  .node{width:7.25rem;font-size:.86rem;padding:.6rem .5rem}
-}
-
 /* ---------- cost ledger ---------- */
 /* Full-width rows with rules between them: the section reads as an itemised
    list of what this has cost, which is a better shape for the argument than a
@@ -463,11 +445,6 @@ section{padding-block:var(--gap)}
   line-height:1.25;letter-spacing:-.012em;color:var(--navy)
 }
 .cost-close em{font-style:italic;color:var(--rust)}
-@media (max-width:760px){
-  .ledger{grid-template-columns:1fr;column-gap:0}
-  .ledger li{grid-template-columns:1.8rem minmax(0,1fr);gap:.9rem}
-}
-
 /* ---------- scroll cue ---------- */
 /* Straddles the seam between the hero and the section below, which is what
    makes it read as a handle on the join rather than a floating badge. It is a
@@ -477,6 +454,7 @@ section{padding-block:var(--gap)}
 /* Vertical pill, no label. The travelling dot is the whole affordance, so it
    carries an aria-label in place of the text it used to have. */
 .scroll-cue{
+  position:relative;
   display:inline-flex;justify-content:center;align-items:flex-start;
   width:30px;height:48px;padding-top:9px;
   transform:translateY(-50%);
@@ -535,13 +513,6 @@ section{padding-block:var(--gap)}
    auto-fit finds three columns at some widths and orphans the fourth. */
 /* Capped as the columns drop, or two cards at 3/4 balloon to 500x667 and the
    section turns into a scroll. */
-@media (max-width:1080px){
-  .signs{grid-template-columns:repeat(2,minmax(0,1fr));max-width:48rem;margin-inline:auto}
-}
-@media (max-width:560px){
-  .signs{grid-template-columns:1fr;max-width:22rem}
-}
-
 /* Image is the whole card face; copy sits over a gradient at the base. */
 .card{
   position:relative;overflow:hidden;isolation:isolate;
@@ -581,7 +552,6 @@ section{padding-block:var(--gap)}
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
   gap:clamp(1rem,2vw,1.6rem);margin-top:clamp(2.5rem,5vw,3.5rem)
 }
-@media (max-width:720px){ .ba-grid{grid-template-columns:1fr} }
 .ba{margin:0}
 .ba-stage{
   position:relative;overflow:hidden;border-radius:var(--radius);
@@ -696,18 +666,6 @@ section{padding-block:var(--gap)}
   max-width:min(46%,33rem)
 }
 .read .readout{margin-top:clamp(2rem,3.5vw,2.75rem)}
-@media (max-width:900px){
-  .read .scan-grid{max-width:none}
-  /* A 16:9 strip is 220px tall on a phone, so the frame crops to the half with
-     a person in it and drops behind a heavy scrim, because the copy runs full
-     width here. */
-  .read-media{aspect-ratio:5/4}
-  .read-media img{object-position:82% top}
-  .read-media::after{
-    background:linear-gradient(0deg, rgba(12,27,48,1) 0%, rgba(12,27,48,.97) 46%,
-                                     rgba(12,27,48,.86) 78%, rgba(12,27,48,.78) 100%)
-  }
-}
 .scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
 .readout{
   background:var(--navy-black);border:1px solid var(--line-dark);
@@ -730,8 +688,6 @@ section{padding-block:var(--gap)}
   list-style:none;margin:0 0 1.4rem;padding:0;
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem
 }
-@media (max-width:900px){ .modes{grid-template-columns:repeat(4,minmax(0,1fr))} }
-@media (max-width:520px){ .modes{grid-template-columns:repeat(2,minmax(0,1fr))} }
 .mode{
   display:flex;flex-direction:column;gap:.45rem;
   padding:.55rem .5rem .6rem;
@@ -797,7 +753,6 @@ section{padding-block:var(--gap)}
   box-shadow:0 30px 60px -34px rgba(20,43,73,.28)
 }
 .booking-frame{display:block;width:100%;border:0;min-height:820px}
-@media (max-width:640px){ .booking-frame{min-height:1000px} }
 .booking-where{
   max-width:44rem;margin:clamp(1.4rem,2.5vw,1.9rem) auto 0;
   font-size:.92rem;line-height:1.6;color:var(--slate);text-align:center
@@ -812,9 +767,6 @@ section{padding-block:var(--gap)}
 .daphne{
   display:grid;grid-template-columns:1fr minmax(0,20rem);
   gap:clamp(2rem,5vw,4.5rem);align-items:center
-}
-@media (max-width:860px){
-  .daphne{grid-template-columns:1fr;max-width:34rem;margin-inline:auto}
 }
 .daphne-pull{
   font-family:var(--serif);font-size:clamp(1.3rem,2vw,1.65rem);
@@ -870,7 +822,6 @@ section{padding-block:var(--gap)}
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(1rem,1.8vw,1.4rem)
 }
-@media (max-width:880px){ .mins{grid-template-columns:1fr;max-width:34rem} }
 .mins li{
   background:#fff;border:1px solid var(--line);
   border-radius:var(--radius);
@@ -912,7 +863,6 @@ section{padding-block:var(--gap)}
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(1rem,2vw,1.6rem)
 }
-@media (max-width:900px){ .stories-grid{grid-template-columns:1fr;max-width:24rem;margin-inline:auto} }
 .story{
   display:flex;flex-direction:column;
   background:rgba(250,239,222,.05);
@@ -993,8 +943,6 @@ section{padding-block:var(--gap)}
   list-style:none;margin:clamp(2.2rem,4vw,3rem) 0 0;padding:0;
   columns:3;column-gap:clamp(1rem,1.8vw,1.4rem)
 }
-@media (max-width:1000px){ .reviews{columns:2} }
-@media (max-width:640px){ .reviews{columns:1} }
 .rv{
   break-inside:avoid;-webkit-column-break-inside:avoid;
   background:#fff;border:1px solid var(--line);border-radius:var(--radius);
@@ -1036,8 +984,6 @@ section{padding-block:var(--gap)}
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
   gap:clamp(2rem,3.4vw,3rem) clamp(1.8rem,3vw,2.8rem)
 }
-@media (max-width:920px){ .adv{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (max-width:600px){ .adv{grid-template-columns:1fr;max-width:26rem} }
 /* A white disc on navy is a hole punched in the band, so the well is a light
    film over it instead. Rust drops to 2.29:1 on this ground; clay holds 3.97:1,
    which is the floor for a graphic that carries meaning. */
@@ -1136,7 +1082,6 @@ footer{background:var(--navy-deep);color:var(--cream);padding-block:3.5rem 2.5re
   display:grid;grid-template-columns:1fr auto;
   gap:clamp(2rem,5vw,4rem);align-items:start
 }
-@media (max-width:720px){ .foot{grid-template-columns:1fr;gap:2.4rem} }
 /* The monogram file is navy on transparent, which is invisible here. Painting
    it through a mask uses only its alpha, so the mark takes the cream rather
    than needing a second colourway exported. */
@@ -1179,11 +1124,110 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
 }
 
 /* ---------- responsive ---------- */
+
+/* ============================================================
+   Two breakpoints, not fourteen. 900px collapses multi-column
+   layouts; 640px is the phone pass. Every component that used to
+   carry its own near-miss breakpoint (1080, 1000, 920, 880, 860,
+   760, 720, 600, 560, 520) now collapses on one of these two, so
+   the page changes shape twice instead of ten times.
+   ============================================================ */
 @media (max-width:900px){
-  .scan-grid,.founder{grid-template-columns:1fr}
+  /* hero */
+  .hero{min-height:auto;padding-block:clamp(3rem,8vw,4.5rem) 0}
+  .hero-stats-grid{grid-template-columns:repeat(2,1fr);gap:.9rem 0}
+  .hero-stats-grid > div:nth-child(3){padding-inline-start:0;border-left:0}
+  .hero-stats-grid > div:nth-child(-n+2){padding-bottom:.9rem;border-bottom:1px solid rgba(20,43,73,.16)}
+  .hero-media video{object-position:center}
+  .hero-scrim{
+    background:linear-gradient(180deg, rgba(250,239,222,.9) 0%,
+               rgba(250,239,222,.86) 55%, rgba(250,239,222,.97) 100%)
+  }
+
+  /* one column */
+  .villain-grid,.scan-grid,.founder,.stories-grid,.mins,.daphne,.ba-grid,.foot,.ledger{
+    grid-template-columns:1fr
+  }
+  .stories-grid{max-width:24rem;margin-inline:auto}
+  .mins{max-width:34rem}
+  .daphne{max-width:34rem;margin-inline:auto}
+  .foot{gap:2.4rem}
+  .ledger{column-gap:0}
+  .ledger li{grid-template-columns:1.8rem minmax(0,1fr);gap:.9rem}
+  .cycle-ring{max-width:23rem}
+  .node{width:7.25rem;font-size:.86rem;padding:.6rem .5rem}
+
+  /* two columns */
+  .signs{grid-template-columns:repeat(2,minmax(0,1fr));max-width:48rem;margin-inline:auto}
+  .adv{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .reviews{columns:2}
+  .modes{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+  /* the skin read photograph */
+  .read .scan-grid{max-width:none}
+  .read-media{aspect-ratio:5/4}
+  .read-media img{object-position:82% top}
+  .read-media::after{
+    background:linear-gradient(0deg, rgba(12,27,48,1) 0%, rgba(12,27,48,.97) 46%,
+               rgba(12,27,48,.86) 78%, rgba(12,27,48,.78) 100%)
+  }
 }
-@media (max-width:520px){
+
+@media (max-width:640px){
   body{font-size:16px}
+
+  /* The hero lede was capped at min(44ch,46%). On a phone 46% resolves against
+     a 327px column, so both paragraphs rendered 150px wide: nineteen characters
+     a line, and a hero 949px tall on an 812px screen. */
+  .hero .lede{max-width:none}
+
+  /* single column */
+  .signs{grid-template-columns:1fr;max-width:22rem}
+  .adv{grid-template-columns:1fr;max-width:26rem}
+  /* Nine stacked cards ran 4.7 screens and gave no sense of how many were
+     left. A snap carousel is the native phone pattern for self-contained
+     cards: all nine stay in the DOM, and the 84% width lets the next one peek
+     so the swipe is discoverable without a hint. */
+  .reviews{
+    columns:auto;display:flex;gap:.85rem;
+    overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    padding-bottom:.5rem;
+    scrollbar-width:none;-ms-overflow-style:none
+  }
+  .reviews::-webkit-scrollbar{display:none}
+  .reviews:focus-visible{outline:2px solid var(--rust);outline-offset:4px;border-radius:var(--radius)}
+  .rv{
+    flex:0 0 84%;margin:0;
+    scroll-snap-align:center;scroll-snap-stop:always
+  }
+  .modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .booking-frame{min-height:1000px}
+
+  /* Label type had drifted as low as 8.8px once the clamps bottomed out. These
+     are labels, not body copy, but 8.8px is not readable at arm's length. */
+  .m-n{font-size:.72rem;letter-spacing:.06em}
+  .daphne-badge,.ba-tag{font-size:.7rem}
+  /* cite is an element here, not a class */
+  .ba-cap cite,.story-tag,.mins-when,.readout .rhead .t,.readout .rhead .s{font-size:.74rem}
+  .eyebrow{font-size:.74rem;letter-spacing:.16em}
+  .rv-when,.score-c,.rv-sub{font-size:.78rem}
+  .fine,.close-facts,.readout .fine{font-size:.8rem}
+
+  /* Every tap target clears 44px. The footer links were 19px tall, and the
+     wordmark and scroll cue were under 30px wide. */
+  .foot-connect a{display:inline-block;padding-block:.78rem}
+  .foot-connect ul{gap:0}
+  .hero-nav .wordmark{
+    display:inline-flex;align-items:center;justify-content:flex-start;
+    min-width:44px;min-height:44px
+  }
+  /* The pill is a deliberate 30x48. Rather than distort it, the hit area is
+     grown with a pseudo-element so the shape stays and the thumb gets 44px. */
+  .scroll-cue::after{
+    content:"";position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);width:48px;height:48px
+  }
 }
 </style>
 </head>
@@ -1639,7 +1683,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
       </div>
     </div>
 
-    <ul class="reviews">
+    <ul class="reviews" tabindex="0" role="region" aria-label="Google reviews, scroll for more">
         <li class="rv rv-a">
           <div class="rv-head">
             <span class="rv-av" aria-hidden="true">Y</span>
