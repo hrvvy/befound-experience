@@ -1,0 +1,13 @@
+# ffmpeg-static, installed only to transcode the media locally
+node_modules/
+package-lock.json
+
+# untranscoded camera/render originals live outside the repo
+*-original.mp4
+
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+.impeccable/
+
