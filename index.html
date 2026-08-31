@@ -1133,15 +1133,51 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
    the page changes shape twice instead of ten times.
    ============================================================ */
 @media (max-width:900px){
-  /* hero */
-  .hero{min-height:auto;padding-block:clamp(3rem,8vw,4.5rem) 0}
+  /* Hero: the film stops being a backdrop and becomes a block of its own,
+     below the copy. Laying text over a 16:9 film only works while there is
+     horizontal room for the empty left third; in a narrow column the subject
+     and the words fight for the same pixels, and the scrim has to be pushed so
+     opaque that the film may as well not be there. Stacked, the copy sits on
+     clean cream and the film is finally seen at its own aspect ratio. */
+  .hero{
+    min-height:auto;
+    padding-block:clamp(2.25rem,6vw,3.5rem) 0;
+    gap:clamp(1.75rem,5vw,2.5rem)
+  }
+  /* hero-inner exists to group the copy and the stats bar. Dissolving its box
+     lets both become flex children of .hero, so the film can be ordered
+     between them. */
+  .hero-inner{display:contents}
+  .hero-nav{order:1}
+  .hero-inner > .hero-pad{order:2}
+  .hero-media{order:3}
+  .hero-stats{order:4}
+
+  /* 16:9 in a 327px column is a 184px strip and the group reads as specks.
+     A 4:3 crop trades the empty left third, which the copy no longer needs,
+     for a third more height and faces at a size worth looking at. */
+  .hero-media{
+    position:static;overflow:hidden;
+    aspect-ratio:4/3;
+    margin-inline:clamp(1.5rem,3.5vw,4rem);
+    border-radius:var(--radius)
+  }
+  /* Biased right: the group starts around a third into the frame, so a centred
+     crop would clip them at the far edge. */
+  .hero-media video{object-position:68% center}
+  /* The scrim exists to make text legible over the film. Nothing sits over it
+     now, so it would only mute the picture. */
+  .hero-scrim{display:none}
+
   .hero-stats-grid{grid-template-columns:repeat(2,1fr);gap:.9rem 0}
   .hero-stats-grid > div:nth-child(3){padding-inline-start:0;border-left:0}
   .hero-stats-grid > div:nth-child(-n+2){padding-bottom:.9rem;border-bottom:1px solid rgba(20,43,73,.16)}
-  .hero-media video{object-position:center}
-  .hero-scrim{
-    background:linear-gradient(180deg, rgba(250,239,222,.9) 0%,
-               rgba(250,239,222,.86) 55%, rgba(250,239,222,.97) 100%)
+  /* Backdrop blur samples what is behind the element; with the film moved out
+     from under it there is nothing to sample, so the tint becomes flat colour. */
+  .hero-stats{
+    background:var(--blush-soft);
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+    border-top:1px solid var(--line)
   }
 
   /* one column */
