@@ -59,7 +59,7 @@ img{max-width:100%;display:block}
 .narrow{max-width:var(--measure)}
 
 /* ---------- type ---------- */
-h1,h2,h3,.serif{font-family:var(--serif);font-weight:400;letter-spacing:-.012em}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.012em}
 h1{
   font-size:clamp(2.9rem,7vw,5.25rem);line-height:1.02;
   margin:0;text-wrap:balance
@@ -79,11 +79,6 @@ em{font-style:italic}
   margin:0 0 1.4rem
 }
 .eyebrow.on-dark{color:var(--blush)}
-.kicker{
-  font-family:var(--sans);font-size:.72rem;font-weight:700;
-  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
-  margin:0 0 1rem
-}
 
 /* ---------- sections ---------- */
 section{padding-block:var(--gap)}
@@ -124,7 +119,6 @@ section{padding-block:var(--gap)}
 .band-dark{background:var(--navy-deep);color:var(--cream)}
 .band-dark h2,.band-dark h3{color:var(--cream)}
 .band-dark p{color:rgba(250,239,222,.82)}
-.band-clay{background:var(--clay);color:var(--cream)}
 
 /* ---------- nav ---------- */
 /* Nav lives inside the hero, laid over the film with no bar of its own. */
@@ -298,7 +292,6 @@ section{padding-block:var(--gap)}
   font-size:.8rem;line-height:1.4;color:var(--slate);
   margin-top:.35rem;max-width:24ch
 }
-.hero-content{position:relative;width:100%}
 /* One colour, one weight. The line break at the full stop does the work that a
    contrasting accent word would otherwise be faking. No max-width: the <br>
    sets the breaks, so the headline scales with the viewport instead of being
@@ -524,7 +517,6 @@ section{padding-block:var(--gap)}
 #recognise .narrow .lede{margin-inline:auto}
 .band-navy h2,.band-navy h3{color:var(--cream)}
 .band-navy .lede,.band-navy p{color:rgba(250,239,222,.8)}
-.band-navy .kicker{color:var(--blush)}
 
 /* ---------- recognition cards ---------- */
 
@@ -581,11 +573,6 @@ section{padding-block:var(--gap)}
   .card{transition:border-color 240ms var(--ease-out)}
   .card:hover{border-color:rgba(203,109,81,.62)}
 }
-
-/* ---------- generic grids ---------- */
-.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:clamp(1.5rem,4vw,3.5rem)}
-.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:clamp(1.5rem,3vw,2.5rem)}
-.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(12.5rem,1fr));gap:clamp(1.25rem,2.5vw,2rem)}
 
 /* ---------- before / after sliders ---------- */
 /* Strict two up. auto-fit was fitting three across and orphaning the fourth,
@@ -755,8 +742,7 @@ section{padding-block:var(--gap)}
   display:block;width:100%;height:auto;aspect-ratio:160/150;
   background:rgba(9,20,35,.55);border-radius:6px
 }
-/* Named .sk, not .fill: the retired gauges owned .fill and .js .fill sets
-   scaleX(0), which would have flattened every silhouette to nothing. */
+/* Named .sk so it can never collide with a generic .fill utility. */
 .mode .sk{fill:rgba(250,239,222,.14)}
 .mode .sk.dark{fill:rgba(9,20,35,.9)}
 .mode .edge{fill:none;stroke:rgba(250,239,222,.4);stroke-width:1.4}
@@ -1840,7 +1826,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
 </section>
 
 <!-- ============ NO-PRESSURE + CLOSE ============ -->
-<section class="band-dark" id="close">
+<section class="band-dark">
   <div class="wrap">
     <div class="close-box">
       <p class="eyebrow on-dark">The no-pressure promise</p>
