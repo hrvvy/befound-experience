@@ -1141,8 +1141,18 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
      clean cream and the film is finally seen at its own aspect ratio. */
   .hero{
     min-height:auto;
-    padding-block:clamp(2.25rem,6vw,3.5rem) 0;
+    padding-block:0 0;
     gap:clamp(1.75rem,5vw,2.5rem)
+  }
+  /* The nav is absolute on desktop so it can float over the film. Stacked,
+     there is nothing to float over: left absolute it sat outside the flow and
+     printed straight through the eyebrow. */
+  .hero-nav{
+    position:static;
+    /* The flex gap already gives 28px below. The extra bottom padding takes it
+       to about 44px, which a small-caps eyebrow needs to read as a new zone
+       rather than as a third nav item. */
+    padding-block:clamp(1.1rem,4vw,1.6rem) clamp(.5rem,2.5vw,1rem)
   }
   /* hero-inner exists to group the copy and the stats bar. Dissolving its box
      lets both become flex children of .hero, so the film can be ordered
