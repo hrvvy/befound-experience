@@ -1222,6 +1222,15 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
 @media (max-width:640px){
   body{font-size:16px}
 
+  /* One gutter. Three containers were setting their own page inset with three
+     different clamps, and at 375px they bottomed out at 20px (--pad), 24px
+     (.hero-pad) and 24px (.signs-wrap). Every visual asset now measures the
+     same width and every left edge lines up down the page. 24px because it is
+     the more comfortable phone gutter and two of the three already used it. */
+  :root{--pad:1.5rem}
+  .hero-pad,.signs-wrap{padding-inline:var(--pad)}
+  .hero-media{margin-inline:var(--pad)}
+
   /* The hero lede was capped at min(44ch,46%). On a phone 46% resolves against
      a 327px column, so both paragraphs rendered 150px wide: nineteen characters
      a line, and a hero 949px tall on an 812px screen. */
