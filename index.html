@@ -222,9 +222,9 @@ section{padding-block:var(--gap)}
    Scrimming in the footage's colour rather than the page cream is what keeps
    the blend invisible instead of banding across the middle of the frame. */
 .hero-media{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--hero-sand)}
-.hero-media video{
+.hero-media img{
   width:100%;height:100%;object-fit:cover;
-  object-position:left center;   /* crop from the right; the empty left is the point */
+  object-position:center;
   display:block
 }
 /* Two washes rather than one. The copy now sits bottom-left, so the vertical
@@ -233,14 +233,16 @@ section{padding-block:var(--gap)}
 .hero-scrim{
   position:absolute;inset:0;z-index:-1;
   background:
-    /* Reaches higher than before: the copy block is tall, and the old wash had
-       already faded to nothing by the time it reached the headline. */
-    linear-gradient(0deg,  rgba(217,198,171,.96) 0%, rgba(217,198,171,.9) 24%,
-                           rgba(217,198,171,.72) 44%, rgba(217,198,171,.4) 62%,
-                           rgba(217,198,171,.12) 78%, rgba(217,198,171,0) 90%),
-    linear-gradient(90deg, rgba(217,198,171,.92) 0%, rgba(217,198,171,.82) 34%,
-                           rgba(217,198,171,.55) 50%, rgba(217,198,171,.22) 64%,
-                           rgba(217,198,171,0) 80%)
+    /* Cream, not sand. The linen behind the copy measures rgb(169,160,169):
+       navy clears 5.63:1 on it unaided, but slate lands at 3.33 and the rust
+       eyebrow at 2.45. At .8 every ink clears its floor (navy 10.88, slate
+       6.44, rust 4.74) and the wash is gone by 58%, so the faces are
+       untouched. */
+    linear-gradient(90deg, rgba(250,239,222,.8) 0%, rgba(250,239,222,.78) 26%,
+                           rgba(250,239,222,.55) 42%, rgba(250,239,222,.24) 52%,
+                           rgba(250,239,222,0) 58%),
+    linear-gradient(0deg,  rgba(250,239,222,.34) 0%, rgba(250,239,222,.12) 22%,
+                           rgba(250,239,222,0) 44%)
 }
 .hero-inner{
   position:relative;width:100%;display:flex;flex-direction:column;
@@ -1174,7 +1176,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   }
   /* Biased right: the group starts around a third into the frame, so a centred
      crop would clip them at the far edge. */
-  .hero-media video{object-position:68% center}
+  .hero-media img{object-position:72% center}
   /* The scrim exists to make text legible over the film. Nothing sits over it
      now, so it would only mute the picture. */
   .hero-scrim{display:none}
@@ -1293,12 +1295,12 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-media">
-    <!-- Drop hero.mp4 + hero-poster.jpg into this folder and the film goes live.
-         Poster renders on its own until then, and for reduced-motion visitors. -->
-    <video autoplay muted loop playsinline preload="metadata"
-           poster="hero-poster.jpg" aria-hidden="true" tabindex="-1">
-      <source src="hero.mp4" type="video/mp4">
-    </video>
+    <!-- Two friends, one masked, shot straight down. Editorial framing and
+         light, documentary skin: the bare face is un-retouched, which is what
+         the page promises four sections down. Not lazy and high priority:
+         it is the largest element above the fold. -->
+    <img src="hero-stayin.jpg" width="1920" height="1078" alt=""
+         fetchpriority="high" decoding="async">
     <div class="hero-scrim"></div>
   </div>
 
