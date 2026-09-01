@@ -310,30 +310,46 @@ section{padding-block:var(--gap)}
    it dissolves the footage into soft colour fields, so the tint can drop to
    .8 and still hold the labels at 4.52:1. Measured, not guessed. Below .8 the
    12.8px labels fall under AA over the busier columns. */
-/* Glass over the photograph rather than a band laid on top of it. The tint
-   was sand, keyed to the retired film; on linen and knitwear that read as a
-   muddy stripe. Cream now, and matched to the frame.
+/* Liquid glass, not frosted glass. Frosted is a flat tint plus a blur; the
+   thing that reads as a real pane is what happens at the boundary — light
+   bending at the top edge, pooling through the body, and dying against the
+   bottom lip.
 
-   The ground under this bar runs from luma 160 on the left to 9 on the right,
-   where her hair fills the corner. Navy needs .82 to clear 4.5:1 at the dark
-   end and slate needs it too (4.98). That sounds too opaque for glass, but
-   glassiness comes from the blur and the edge, not from opacity: at 48px the
-   ground is unrecognisable anyway, so the alpha costs nothing visually and
-   buys the legibility back.
+   Four layers do that here:
+     1. a graded body, denser at the base, because light falls off through
+        glass rather than sitting at one opacity
+     2. a bright specular rim on the top edge, with a short bloom under it
+     3. a dark inner lip at the bottom, which is what gives the pane thickness
+     4. an angled sheen across the surface, so the highlight is a reflection
+        rather than an even wash
 
-   saturate, not brightness. brightness scales every channel and amplifies the
-   warm cast rather than correcting it, which is what went wrong on the nav
-   button. */
+   The ground beneath runs from luma 160 on the left to 9 on the right, where
+   her hair fills the corner, so every stop is checked against the dark end:
+   the thinnest, .80, still gives navy 8.01 and slate 4.74. */
 .hero-stats{
-  background:rgba(250,239,222,.82);
-  -webkit-backdrop-filter:blur(48px) saturate(1.35);
-  backdrop-filter:blur(48px) saturate(1.35);
-  border-top:1px solid rgba(255,255,255,.55);
-  border-bottom:1px solid rgba(20,43,73,.07);
-  /* A specular top edge and a soft interior falloff: the two cues that read as
-     a pane of glass rather than a translucent rectangle. */
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),
-             inset 0 -14px 24px -18px rgba(20,43,73,.28)
+  position:relative;isolation:isolate;
+  background:linear-gradient(180deg,
+    rgba(255,252,247,.86) 0%,
+    rgba(250,239,222,.80) 40%,
+    rgba(246,234,217,.84) 100%);
+  -webkit-backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
+  backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
+  border-top:1px solid rgba(255,255,255,.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.92),
+    inset 0 3px 8px -4px rgba(255,255,255,.75),
+    inset 0 -1px 0 rgba(20,43,73,.12),
+    inset 0 -20px 30px -24px rgba(20,43,73,.32)
+}
+/* The sheen. Angled and narrow, so it reads as a reflection crossing the pane
+   rather than a gradient someone applied to it. */
+.hero-stats::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(102deg,
+    rgba(255,255,255,0) 6%,
+    rgba(255,255,255,.28) 17%,
+    rgba(255,255,255,.05) 29%,
+    rgba(255,255,255,0) 46%)
 }
 /* Without backdrop-filter the image behind stays sharp and .8 is unreadable,
    so those browsers get the solid band instead. */
@@ -2061,7 +2077,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
       </details>
       <details>
         <summary>How fast does a barrier rebuild?</summary>
-        <div class="ans">It depends where yours starts, which is exactly what the scan is for. A barrier that has been stripped for years takes longer than one that has been stripped for months. Your Findings will give you a realistic timeline rather than a marketing one, and you get that timeline whether you join us or not.</div>
+        <div class="ans">It depends where yours starts, which is exactly what the scan is for. A barrier that has been stripped for years takes longer than one that has been stripped for months. Your Findings will give you a realistic timeline.</div>
       </details>
     </div>
     <p style="text-align:center;margin-top:2.5rem"><a class="btn" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a></p>
