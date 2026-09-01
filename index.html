@@ -310,12 +310,30 @@ section{padding-block:var(--gap)}
    it dissolves the footage into soft colour fields, so the tint can drop to
    .8 and still hold the labels at 4.52:1. Measured, not guessed. Below .8 the
    12.8px labels fall under AA over the busier columns. */
+/* Glass over the photograph rather than a band laid on top of it. The tint
+   was sand, keyed to the retired film; on linen and knitwear that read as a
+   muddy stripe. Cream now, and matched to the frame.
+
+   The ground under this bar runs from luma 160 on the left to 9 on the right,
+   where her hair fills the corner. Navy needs .82 to clear 4.5:1 at the dark
+   end and slate needs it too (4.98). That sounds too opaque for glass, but
+   glassiness comes from the blur and the edge, not from opacity: at 48px the
+   ground is unrecognisable anyway, so the alpha costs nothing visually and
+   buys the legibility back.
+
+   saturate, not brightness. brightness scales every channel and amplifies the
+   warm cast rather than correcting it, which is what went wrong on the nav
+   button. */
 .hero-stats{
-  border-top:1px solid rgba(255,255,255,.4);
-  box-shadow:inset 0 -1px 0 rgba(20,43,73,.06);
-  background:rgba(217,198,171,.8);
-  -webkit-backdrop-filter:blur(44px) saturate(1.45) brightness(1.03);
-  backdrop-filter:blur(44px) saturate(1.45) brightness(1.03)
+  background:rgba(250,239,222,.82);
+  -webkit-backdrop-filter:blur(48px) saturate(1.35);
+  backdrop-filter:blur(48px) saturate(1.35);
+  border-top:1px solid rgba(255,255,255,.55);
+  border-bottom:1px solid rgba(20,43,73,.07);
+  /* A specular top edge and a soft interior falloff: the two cues that read as
+     a pane of glass rather than a translucent rectangle. */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6),
+             inset 0 -14px 24px -18px rgba(20,43,73,.28)
 }
 /* Without backdrop-filter the image behind stays sharp and .8 is unreadable,
    so those browsers get the solid band instead. */
