@@ -132,10 +132,10 @@ section{padding-block:var(--gap)}
 .ask{
   position:absolute;left:var(--x);top:var(--y);
   transform:translate(-50%,-50%);
-  white-space:nowrap;
-  font-family:var(--sans);font-size:clamp(.7rem,.84vw,.82rem);
-  font-weight:600;letter-spacing:.015em;color:var(--cream);
-  padding:.6em 1.05em;border-radius:999px;
+  font-family:var(--sans);font-size:clamp(.82rem,1vw,.98rem);
+  font-weight:600;letter-spacing:.01em;line-height:1.35;color:var(--cream);
+  padding:.62em 1.1em;border-radius:1.6em;
+  text-wrap:balance;
   background:rgba(12,27,48,.74);
   -webkit-backdrop-filter:blur(18px) saturate(125%);
   backdrop-filter:blur(18px) saturate(125%);
@@ -151,6 +151,11 @@ section{padding-block:var(--gap)}
 }
 /* Deliberately mismatched periods. Equal durations make three objects bob in
    lockstep, which reads as a carousel rather than as air. */
+.ask-a,.ask-c{white-space:nowrap}
+/* The long one is a whole thought, so it gets a measure and wraps rather than
+   stretching to a 30% wide pill. */
+.ask-b{max-width:19rem}
+
 .ask-a{--dur:7.3s;  animation-delay:.2s,  .95s}
 .ask-b{--dur:9.7s;  animation-delay:.45s, 1.2s}
 .ask-c{--dur:8.1s;  animation-delay:.7s,  1.45s}
@@ -281,16 +286,15 @@ section{padding-block:var(--gap)}
 .hero-scrim{
   position:absolute;inset:0;z-index:-1;
   background:
-    /* Cream, not sand. The linen behind the copy measures rgb(169,160,169):
-       navy clears 5.63:1 on it unaided, but slate lands at 3.33 and the rust
-       eyebrow at 2.45. At .8 every ink clears its floor (navy 10.88, slate
-       6.44, rust 4.74) and the wash is gone by 58%, so the faces are
-       untouched. */
-    linear-gradient(90deg, rgba(250,239,222,.8) 0%, rgba(250,239,222,.78) 26%,
-                           rgba(250,239,222,.55) 42%, rgba(250,239,222,.24) 52%,
-                           rgba(250,239,222,0) 58%),
-    linear-gradient(0deg,  rgba(250,239,222,.34) 0%, rgba(250,239,222,.12) 22%,
-                           rgba(250,239,222,0) 44%)
+    /* Copy sits on linen at rgb(194,180,164). Navy clears 7.04:1 unaided but
+       slate lands at 4.17 and the rust eyebrow at 3.07. .66 is the floor that
+       carries rust (4.55); below it the eyebrow fails. Gone by 56% so the
+       faces are untouched. */
+    linear-gradient(90deg, rgba(250,239,222,.66) 0%, rgba(250,239,222,.64) 24%,
+                           rgba(250,239,222,.48) 38%, rgba(250,239,222,.18) 48%,
+                           rgba(250,239,222,0) 56%),
+    linear-gradient(0deg,  rgba(250,239,222,.26) 0%, rgba(250,239,222,.1) 20%,
+                           rgba(250,239,222,0) 42%)
 }
 .hero-inner{
   position:relative;width:100%;display:flex;flex-direction:column;
@@ -323,21 +327,19 @@ section{padding-block:var(--gap)}
      4. an angled sheen across the surface, so the highlight is a reflection
         rather than an even wash
 
-   The ground beneath runs from luma 160 on the left to 9 on the right, where
-   her hair fills the corner, so every stop is checked against the dark end:
-   the thinnest, .80, still gives navy 8.29 and slate 4.90. */
+   An earlier frame had a luma-9 corner and forced .82 to keep the labels
+   legible. This one is bright edge to edge — 173 under the left of the bar,
+   163 under the right — so the same material can be genuinely transparent.
+   At .44 slate still reads 5.12:1. */
 .hero-stats{
   position:relative;isolation:isolate;
-  /* Tinted from the photograph, not from the page token. The frame is oatmeal
-     linen: red and green sit level with blue about 23 below (rgb 176,173,153
-     across every light patch). --cream is red-forward by comparison, R-G 11,
-     and over this image it read as a pink film. These stops lift the image own
-     value rather than scaling it, because scaling multiplies the R-B gap and
-     drifts back toward cream. */
+  /* Tinted from this photograph: its light areas sample rgb(188,171,154),
+     R-G 17 and R-B 34, warmer than --cream. The stops lift that value rather
+     than borrowing the token. Resample if the hero is swapped again. */
   background:linear-gradient(180deg,
-    rgba(253,250,230,.86) 0%,
-    rgba(248,245,225,.80) 40%,
-    rgba(238,235,215,.84) 100%);
+    rgba(253,239,224,.52) 0%,
+    rgba(250,234,218,.44) 40%,
+    rgba(242,226,210,.5) 100%);
   -webkit-backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
   backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
   border-top:1px solid rgba(255,255,255,.85);
@@ -1397,10 +1399,15 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
          reachable by a screen reader, and it keeps the photograph a
          photograph. -->
     <div class="asks" aria-label="Questions a Skin Read answers">
-      <span class="ask ask-a" style="--x:43%;--y:22%">Dry, or dehydrated?</span>
-      <span class="ask ask-b" style="--x:66%;--y:9%">Barrier?</span>
-      <span class="ask ask-c" style="--x:85%;--y:19%">Am I over-exfoliating?</span>
+      <span class="ask ask-a" style="--x:46%;--y:10%">Am I lacking hydration?</span>
+      <span class="ask ask-b" style="--x:70%;--y:12%">I wonder if I can get clear skin like hers if I do the same</span>
+      <span class="ask ask-c" style="--x:48%;--y:26%">Is my skin really that dry?</span>
     </div>
+
+    <!-- Her questions, in the band above the faces. HTML rather than burned
+         into the picture: crisp at any size, editable when the copy moves,
+         reachable by a screen reader, and it keeps the photograph a
+         photograph. -->
   </div>
 
   <nav class="hero-nav hero-pad">
