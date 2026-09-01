@@ -120,6 +120,54 @@ section{padding-block:var(--gap)}
 .band-dark h2,.band-dark h3{color:var(--cream)}
 .band-dark p{color:rgba(250,239,222,.82)}
 
+/* ---------- hero questions ---------- */
+
+/* Three questions beside the dome. They never resolve, and that is the point:
+   the drift is what unanswered looks like. The machine is the answer. */
+.asks{position:absolute;inset:0;z-index:1;pointer-events:none}
+.ask{
+  position:absolute;left:var(--x);top:var(--y);
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+  font-family:var(--sans);font-size:clamp(.72rem,.88vw,.86rem);
+  font-weight:600;letter-spacing:.01em;color:var(--navy);
+  padding:.62em 1em;border-radius:999px;
+  /* The chips cross wall, white casing and black dome interior: ground luma
+     runs 14 to 182. Navy on this glass clears 5.09:1 even at the darkest
+     point, so one treatment works everywhere. A clay glyph would not: it
+     measures 1.28:1 on the same chip. */
+  background:rgba(250,239,222,.66);
+  -webkit-backdrop-filter:blur(22px) saturate(130%);
+  backdrop-filter:blur(22px) saturate(130%);
+  border:1px solid rgba(255,255,255,.55);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 16px 32px -20px rgba(9,20,35,.65)
+}
+
+/* At rest and visible by default, so a script failure leaves them readable. */
+.js .ask{opacity:0}
+.js .asks.in .ask{
+  animation:ask-in .75s var(--ease-out) forwards,
+            ask-drift var(--dur) ease-in-out infinite
+}
+/* Deliberately mismatched periods. Equal durations make three objects bob in
+   lockstep, which reads as a carousel rather than as air. */
+.ask-a{--dur:7.3s;  animation-delay:.15s, .9s}
+.ask-b{--dur:9.7s;  animation-delay:.4s,  1.15s}
+.ask-c{--dur:8.1s;  animation-delay:.65s, 1.4s}
+
+@keyframes ask-in{
+  from{opacity:0;transform:translate(-50%,calc(-50% + 12px)) scale(.95)}
+  to  {opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+@keyframes ask-drift{
+  0%,100%{transform:translate(-50%,-50%)}
+  50%    {transform:translate(-50%,calc(-50% - 6px))}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .ask{opacity:1}
+  .js .asks.in .ask{animation:none}
+}
+
 /* ---------- nav ---------- */
 /* Nav lives inside the hero, laid over the film with no bar of its own. */
 .hero-nav{
@@ -171,7 +219,7 @@ section{padding-block:var(--gap)}
   font-family:var(--sans);font-size:.83rem;font-weight:700;
   letter-spacing:.055em;text-transform:uppercase;
   background:var(--clay);color:var(--cream);
-  text-decoration:none;border:1px solid var(--clay);
+  text-decoration:none;border:1px solid var(--rust);
   padding:1rem 1.65rem;border-radius:999px;
   transition:background 160ms var(--ease-out),border-color 160ms var(--ease-out),
              transform 160ms var(--ease-out);
@@ -222,7 +270,7 @@ section{padding-block:var(--gap)}
    Scrimming in the footage's colour rather than the page cream is what keeps
    the blend invisible instead of banding across the middle of the frame. */
 .hero-media{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--hero-sand)}
-.hero-media video{
+.hero-media img{
   width:100%;height:100%;object-fit:cover;
   object-position:left center;   /* crop from the right; the empty left is the point */
   display:block
@@ -230,18 +278,6 @@ section{padding-block:var(--gap)}
 /* Two washes rather than one. The copy now sits bottom-left, so the vertical
    wash carries most of the legibility and the horizontal one can be gentler,
    which keeps more of the group unveiled than the old centred layout did. */
-.hero-scrim{
-  position:absolute;inset:0;z-index:-1;
-  background:
-    /* Reaches higher than before: the copy block is tall, and the old wash had
-       already faded to nothing by the time it reached the headline. */
-    linear-gradient(0deg,  rgba(217,198,171,.96) 0%, rgba(217,198,171,.9) 24%,
-                           rgba(217,198,171,.72) 44%, rgba(217,198,171,.4) 62%,
-                           rgba(217,198,171,.12) 78%, rgba(217,198,171,0) 90%),
-    linear-gradient(90deg, rgba(217,198,171,.92) 0%, rgba(217,198,171,.82) 34%,
-                           rgba(217,198,171,.55) 50%, rgba(217,198,171,.22) 64%,
-                           rgba(217,198,171,0) 80%)
-}
 .hero-inner{
   position:relative;width:100%;display:flex;flex-direction:column;
   gap:clamp(1.75rem,4vw,2.75rem)
@@ -1174,11 +1210,9 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   }
   /* Biased right: the group starts around a third into the frame, so a centred
      crop would clip them at the far edge. */
-  .hero-media video{object-position:68% center}
-  /* The scrim exists to make text legible over the film. Nothing sits over it
-     now, so it would only mute the picture. */
-  .hero-scrim{display:none}
+  .hero-media img{object-position:64% center}
 
+  .asks{display:none}
   .hero-stats-grid{grid-template-columns:repeat(2,1fr);gap:.9rem 0}
   .hero-stats-grid > div:nth-child(3){padding-inline-start:0;border-left:0}
   .hero-stats-grid > div:nth-child(-n+2){padding-bottom:.9rem;border-bottom:1px solid rgba(20,43,73,.16)}
@@ -1293,13 +1327,21 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="hero-media">
-    <!-- Drop hero.mp4 + hero-poster.jpg into this folder and the film goes live.
-         Poster renders on its own until then, and for reduced-motion visitors. -->
-    <video autoplay muted loop playsinline preload="metadata"
-           poster="hero-poster.jpg" aria-hidden="true" tabindex="-1">
-      <source src="hero.mp4" type="video/mp4">
-    </video>
-    <div class="hero-scrim"></div>
+    <!-- The studio own imaging dome. A real photograph, outpainted to 16:9
+         on the left so the headline has quiet wall to sit on. The retired film
+         is in retired/ and in git history. Not lazy and high priority: this is
+         the largest element above the fold. -->
+    <img src="hero-dome.jpg" width="1920" height="1078" alt=""
+         fetchpriority="high" decoding="async">
+
+    <!-- The questions she is already asking, beside the machine that answers
+         them. HTML rather than burned into the picture: crisp at any size,
+         editable, and it keeps the photograph a photograph. -->
+    <div class="asks" aria-label="Questions a Skin Read answers">
+      <span class="ask ask-a" style="--x:58%;--y:20%">Dry, or dehydrated?</span>
+      <span class="ask ask-b" style="--x:66%;--y:70%">Am I over-exfoliating?</span>
+      <span class="ask ask-c" style="--x:78%;--y:42%">Barrier?</span>
+    </div>
   </div>
 
   <nav class="hero-nav hero-pad">
@@ -1647,8 +1689,8 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
       </li>
       <li>
         <p class="mins-when">Minutes 30 to 45 &middot; What is possible</p>
-        <h3>Your path, mapped</h3>
-        <p>We map out where your skin could go from here and the path to get it there. Clear, honest, specific to your skin.</p>
+        <h3>Your path, and whether we are right for it</h3>
+        <p>We map out where your skin could realistically go and what it takes to get there. Then we are straight about whether BeFound is the right fit to take you. If it is not, we say so.</p>
       </li>
     </ol>
     <p class="mins-close">You leave knowing more about your skin than you ever have.</p>
@@ -2018,6 +2060,11 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   // animated start; without it the CSS defaults already show the final state,
   // so a script failure never hides content.
   document.documentElement.classList.add('js');
+
+  // Hero questions. Hidden only while the script runs, so a failure leaves
+  // them at rest and readable rather than invisible.
+  var asks = document.querySelector('.asks');
+  if(asks) requestAnimationFrame(function(){ asks.classList.add('in'); });
 
   // Before / after sliders. The range input does the real work, so keyboard and
   // assistive tech are handled natively; this only mirrors its value onto the
