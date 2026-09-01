@@ -325,13 +325,19 @@ section{padding-block:var(--gap)}
 
    The ground beneath runs from luma 160 on the left to 9 on the right, where
    her hair fills the corner, so every stop is checked against the dark end:
-   the thinnest, .80, still gives navy 8.01 and slate 4.74. */
+   the thinnest, .80, still gives navy 8.29 and slate 4.90. */
 .hero-stats{
   position:relative;isolation:isolate;
+  /* Tinted from the photograph, not from the page token. The frame is oatmeal
+     linen: red and green sit level with blue about 23 below (rgb 176,173,153
+     across every light patch). --cream is red-forward by comparison, R-G 11,
+     and over this image it read as a pink film. These stops lift the image own
+     value rather than scaling it, because scaling multiplies the R-B gap and
+     drifts back toward cream. */
   background:linear-gradient(180deg,
-    rgba(255,252,247,.86) 0%,
-    rgba(250,239,222,.80) 40%,
-    rgba(246,234,217,.84) 100%);
+    rgba(253,250,230,.86) 0%,
+    rgba(248,245,225,.80) 40%,
+    rgba(238,235,215,.84) 100%);
   -webkit-backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
   backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
   border-top:1px solid rgba(255,255,255,.85);
