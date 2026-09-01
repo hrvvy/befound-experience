@@ -134,8 +134,7 @@ section{padding-block:var(--gap)}
   transform:translate(-50%,-50%);
   font-family:var(--sans);font-size:clamp(.82rem,1vw,.98rem);
   font-weight:600;letter-spacing:.01em;line-height:1.35;color:var(--cream);
-  padding:.62em 1.1em;border-radius:1.6em;
-  text-wrap:balance;
+  padding:.62em 1.1em;border-radius:999px;
   background:rgba(12,27,48,.74);
   -webkit-backdrop-filter:blur(18px) saturate(125%);
   backdrop-filter:blur(18px) saturate(125%);
@@ -151,10 +150,7 @@ section{padding-block:var(--gap)}
 }
 /* Deliberately mismatched periods. Equal durations make three objects bob in
    lockstep, which reads as a carousel rather than as air. */
-.ask-a,.ask-c{white-space:nowrap}
-/* The long one is a whole thought, so it gets a measure and wraps rather than
-   stretching to a 30% wide pill. */
-.ask-b{max-width:19rem}
+.ask{white-space:nowrap}
 
 .ask-a{--dur:7.3s;  animation-delay:.2s,  .95s}
 .ask-b{--dur:9.7s;  animation-delay:.45s, 1.2s}
@@ -1400,7 +1396,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
          photograph. -->
     <div class="asks" aria-label="Questions a Skin Read answers">
       <span class="ask ask-a" style="--x:46%;--y:10%">Am I lacking hydration?</span>
-      <span class="ask ask-b" style="--x:70%;--y:12%">I wonder if I can get clear skin like hers if I do the same</span>
+      <span class="ask ask-b" style="--x:70%;--y:12%">Should I be doing that too?</span>
       <span class="ask ask-c" style="--x:48%;--y:26%">Is my skin really that dry?</span>
     </div>
 
