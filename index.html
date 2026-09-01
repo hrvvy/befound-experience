@@ -120,6 +120,54 @@ section{padding-block:var(--gap)}
 .band-dark h2,.band-dark h3{color:var(--cream)}
 .band-dark p{color:rgba(250,239,222,.82)}
 
+/* ---------- hero questions ---------- */
+
+/* Three questions above the faces. They never resolve, and that is the point:
+   the drift is what unanswered looks like. The page is the answer.
+   Navy glass, not cream: this frame is linen and knitwear, and a cream chip on
+   a cream sleeve has an edge of 1.35:1 against its own ground. Inverted, it
+   reads on every surface here — 8.21:1 on the sleeve, 9.50 on linen, 14.44 on
+   hair. */
+.asks{position:absolute;inset:0;z-index:1;pointer-events:none}
+.ask{
+  position:absolute;left:var(--x);top:var(--y);
+  transform:translate(-50%,-50%);
+  white-space:nowrap;
+  font-family:var(--sans);font-size:clamp(.7rem,.84vw,.82rem);
+  font-weight:600;letter-spacing:.015em;color:var(--cream);
+  padding:.6em 1.05em;border-radius:999px;
+  background:rgba(12,27,48,.74);
+  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  backdrop-filter:blur(18px) saturate(125%);
+  border:1px solid rgba(250,239,222,.22);
+  box-shadow:inset 0 1px 0 rgba(250,239,222,.16), 0 18px 34px -20px rgba(9,20,35,.7)
+}
+
+/* At rest and visible by default, so a script failure leaves them readable. */
+.js .ask{opacity:0}
+.js .asks.in .ask{
+  animation:ask-in .75s var(--ease-out) forwards,
+            ask-drift var(--dur) ease-in-out infinite
+}
+/* Deliberately mismatched periods. Equal durations make three objects bob in
+   lockstep, which reads as a carousel rather than as air. */
+.ask-a{--dur:7.3s;  animation-delay:.2s,  .95s}
+.ask-b{--dur:9.7s;  animation-delay:.45s, 1.2s}
+.ask-c{--dur:8.1s;  animation-delay:.7s,  1.45s}
+
+@keyframes ask-in{
+  from{opacity:0;transform:translate(-50%,calc(-50% + 12px)) scale(.95)}
+  to  {opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+@keyframes ask-drift{
+  0%,100%{transform:translate(-50%,-50%)}
+  50%    {transform:translate(-50%,calc(-50% - 6px))}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .ask{opacity:1}
+  .js .asks.in .ask{animation:none}
+}
+
 /* ---------- nav ---------- */
 /* Nav lives inside the hero, laid over the film with no bar of its own. */
 .hero-nav{
@@ -1181,6 +1229,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
      now, so it would only mute the picture. */
   .hero-scrim{display:none}
 
+  .asks{display:none}
   .hero-stats-grid{grid-template-columns:repeat(2,1fr);gap:.9rem 0}
   .hero-stats-grid > div:nth-child(3){padding-inline-start:0;border-left:0}
   .hero-stats-grid > div:nth-child(-n+2){padding-bottom:.9rem;border-bottom:1px solid rgba(20,43,73,.16)}
@@ -1302,6 +1351,16 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
     <img src="hero-stayin.jpg" width="1920" height="1078" alt=""
          fetchpriority="high" decoding="async">
     <div class="hero-scrim"></div>
+
+    <!-- Her questions, in the band above the faces. HTML rather than burned
+         into the picture: crisp at any size, editable when the copy moves,
+         reachable by a screen reader, and it keeps the photograph a
+         photograph. -->
+    <div class="asks" aria-label="Questions a Skin Read answers">
+      <span class="ask ask-a" style="--x:43%;--y:22%">Dry, or dehydrated?</span>
+      <span class="ask ask-b" style="--x:66%;--y:9%">Barrier?</span>
+      <span class="ask ask-c" style="--x:85%;--y:19%">Am I over-exfoliating?</span>
+    </div>
   </div>
 
   <nav class="hero-nav hero-pad">
@@ -2020,6 +2079,11 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   // animated start; without it the CSS defaults already show the final state,
   // so a script failure never hides content.
   document.documentElement.classList.add('js');
+
+  // Hero questions. Hidden only while the script runs, so a failure leaves
+  // them at rest and readable rather than invisible.
+  var asks = document.querySelector('.asks');
+  if(asks) requestAnimationFrame(function(){ asks.classList.add('in'); });
 
   // Before / after sliders. The range input does the real work, so keyboard and
   // assistive tech are handled natively; this only mirrors its value onto the
