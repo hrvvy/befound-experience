@@ -317,108 +317,172 @@ base, and a small circular control ring lit pale blue below it.
 
 ---
 
-# Round four: top down, two faces, one masked
+# Round five: pyjamas, at home, native
 
-## Why this composition and not the last one
+## Native is a reversal of the editorial brief, not a refinement
 
-The first version of this idea had one friend touching the other's cheek while
-she laughed with her eyes closed. That reads romantic, not companionable.
+Round four asked for a magazine composition: a plain oatmeal sheet, one large
+soft key from the upper left, a tonal palette, medium format, no clutter. It
+worked, and it produced the frame currently on the page.
 
-Lying side by side, both facing up, parallel, not touching, fixes it and does
-three other things at the same time:
+Native asks for the opposite of most of that. Something that looks like a
+friend posted it, not something a brand commissioned. The two briefs cannot
+both be followed, so this one drops the editorial framing deliberately:
 
-- **No hands in frame.** Hands are the single hardest thing to generate and
-  every previous round had them.
-- **A sheet mask covers one face.** Half the face risk removed without hiding
-  anyone.
-- **A top-down flat lay is graphic.** Callouts can point at actual face zones
-  instead of floating, which is what the barrier readout does further down.
+| Editorial (round four) | Native (this one) |
+|---|---|
+| medium format, f/2.8 | phone camera, wider lens |
+| one large soft key | whatever the window is doing |
+| plain sheet, nothing else | a real bed, lived in |
+| tonal, graded palette | uncorrected white balance |
+| composed and still | slightly off, caught |
+| fine grain | phone sensor grain |
 
-## What the picture argues
+**What does not change is the skin.** Un-retouched was the point in every
+round and it is the point here. Native helps rather than hurts: phone photos
+show texture that a beauty shoot would smooth away.
 
-The masked friend is doing what everyone does. The curious one beside her is
-the reader, wondering whether she should be doing it too. The callouts are her
-questions, and the page is the answer.
+## What the layout still needs
 
-That is why the mask is fine here where "two women applying cream to each
-other" was not. One is a ritual, the other is a regimen, and only the regimen
-is what the page argues against.
+These are not stylistic, they are the reasons the last frame had to be
+re-cropped by hand. Ask for them explicitly.
+
+| Requirement | Why |
+|---|---|
+| Left 40 to 45 percent quiet and plain | The headline column sits there. A bedside table in that half kills it. |
+| Clear space above their heads, about a quarter of the frame | The question chips live there. |
+| Heads in the lower two thirds, not the middle | The last render put them so low in a tall empty frame that 12% had to be cropped off the top. |
+| Both faces up, parallel, not touching | Turned toward each other reads as intimacy, not friendship. |
+| 16:9 | The hero box is roughly 1.8 and crops the sides, not the top. |
+| Modest coverage, long sleeves | Overhead framing puts collars and shoulders in shot. |
 
 **Settings:** GPT Image 2 (`gpt_image_2`) / **16:9** / **2k** / quality high.
 Save as `hero-stayin.jpg`.
 
 ## The prompt
 
-Editorial in framing and light. Documentary in skin. That distinction is the
-whole brief: beauty editorial normally means retouched, and retouched is
-unusable on a page that promises "real skin, no filters" four sections down.
-Ask for the composition of a magazine and the skin of a snapshot.
-
 ```
-Editorial beauty photograph, 16:9 landscape, shot from DIRECTLY OVERHEAD
-looking straight down. Two Singaporean women in their late twenties lie on
-their backs on a smooth oatmeal linen sheet, heads side by side and close
-together, bodies running away from the camera and cropped out of frame below
-the shoulders. They lie PARALLEL, both faces up toward the lens, not turned
-toward each other and not touching.
+Candid phone photograph, 16:9 landscape, shot from DIRECTLY OVERHEAD looking
+straight down at a bed. Two Singaporean women in their late twenties lie on
+their backs on a rumpled duvet, heads side by side and close together, bodies
+running away from the camera and cropped out of frame below the shoulders.
+They lie PARALLEL, both faces up toward the lens, not turned toward each other
+and not touching.
 
-Both are FULLY CLOTHED in fine long-sleeved knitwear with high necklines, one
-in oatmeal and one in warm ivory. Only their collars and shoulders are in
-frame, fully covered.
+Both wear real pyjamas, FULLY COVERED: one in a soft washed-cotton pyjama
+shirt with a collar and long sleeves in a faded stripe, the other in a plain
+oatmeal long-sleeved pyjama top with a crew neck. The fabric is soft and
+slightly creased from being worn. Only collars and shoulders are in frame.
 
-The woman on the RIGHT wears a plain white cotton sheet mask smoothed over her
-whole face, with openings at the eyes, nostrils and mouth. Her eyes are closed
-and she is completely still.
+The woman on the RIGHT wears a white cotton sheet mask over her whole face
+with openings at the eyes, nostrils and mouth. THE MASK IS VISIBLY CREASED
+AND FOLDED where it has been smoothed down, with a slightly damp edge lifting
+near the jaw. Her eyes are closed.
 
 The woman beside her is bare-faced, no makeup, eyes open, one eyebrow slightly
 raised, glancing sideways toward her friend with a curious, questioning
 expression, on the edge of a smile.
 
-COMPOSITION: deliberate and quiet, with generous negative space. Their heads
-sit RIGHT OF CENTRE and low in the frame. The LEFT 40 TO 45 PERCENT is
-uninterrupted linen, softly creased, carrying no objects and no detail. The
-creases run diagonally and give the empty half something to do.
+FRAMING: their heads sit RIGHT OF CENTRE and in the LOWER TWO THIRDS of the
+frame. Above their heads there is about a quarter of a frame of clear space.
+The LEFT 40 TO 45 PERCENT is a plain, quiet area of the duvet, softly creased,
+carrying no objects at all.
 
-PALETTE: tonal and restrained. Oatmeal, warm ivory, sand, soft shadow. No
-strong colour anywhere. No product packaging, no jars, no tubes, no sachets,
-no labels, no text in the frame.
+THE ROOM: a real bedroom, lived in and not styled. In the right half only, a
+few honest details near the edges — the corner of a pillow, a phone lying face
+down, a hair tie, a paperback. Nothing arranged. No product packaging, no
+jars, no tubes, no sachets, no labels, no text anywhere.
 
-LIGHT: a single large soft source from the upper left, sculpting both faces
-and falling away gently across the linen toward the lower right. Deliberate,
-not ambient. One direction, no fill, no flash.
+LIGHT: soft late-morning daylight from a window off to one side. Whatever the
+room is doing, not a lighting setup. No flash.
 
-IMPORTANT: the framing and the light are editorial; the SKIN IS NOT. The
-bare-faced woman is completely un-retouched. Visible pores, fine vellus hair,
-natural unevenness, faint texture across the cheek, real shine on the
-cheekbone and the nose. No smoothing, no beauty filter, no airbrushing, no
-plastic finish. A glassy render is unusable.
+IMPORTANT: completely un-retouched skin on the bare-faced woman. Visible
+pores, fine vellus hair, natural unevenness, a few marks, real shine on the
+nose and cheekbone. No smoothing, no beauty filter, no airbrushing. A glassy
+render is unusable.
 
-Shot on medium format at f/2.8, directly overhead, shallow depth of field.
-Fine natural grain. Muted, desaturated, editorial colour grade. Still and
-composed rather than caught.
+Shot handheld on a phone, wide lens, deep focus, faint sensor grain, natural
+uncorrected colour. Slightly imperfect framing, as if taken quickly. It should
+look like something one of them posted, not like a photograph a brand
+commissioned.
 ```
 
-## Check before accepting
+## Check in this order
 
-**The angle.** It must be straight down. A three-quarter overhead will read as
-two people leaning together and the friendship reading collapses.
+**The skin.** Bare-faced woman, at full size. If it is smoothed to glass the
+render is unusable no matter how good the rest is.
 
-**The bare face.** If it is smoothed to glass it is unusable. The page
-promises "real skin, no filters" four sections down.
+**The mask.** Creases and a lifting edge. A smooth white shape reads as a
+filter, which is the exact tell this page cannot afford.
 
-**The mask.** A sheet mask should sit as fabric with visible edges and slight
-creasing, not as a smooth white shape painted onto the face.
+**The left 40 percent.** Plain duvet, nothing on it. This is the one the
+generator will get wrong most often, because "lived-in bedroom" pulls clutter
+everywhere.
 
-**The left side.** The headline sits there. Plain rumpled fabric, nothing else.
+**Head height.** Lower two thirds, with about a quarter of a frame of clear
+space above. If they float in the middle of an empty frame, the top has to be
+cropped by hand again.
 
-**Wardrobe.** High necklines, long sleeves, collars and shoulders covered.
+**Pyjamas.** Collars, long sleeves, full coverage. Overhead framing is where
+the earlier topless problem came from.
 
-## Callouts, once the frame exists
+**Whether it reads as native.** If it looks lit rather than found, ask again
+for window light and a phone lens. The giveaway is a shadow that falls too
+cleanly.
 
-Overhead faces mean the questions can anchor to real places rather than drift
-in space: a thin leader line from each chip to a cheek, a jaw, a forehead.
-That is the same gesture as the eight-mode readout further down the page, so
-the hero and the scan card start speaking the same language.
+---
 
-They should cluster around the CURIOUS face, not the masked one. They are her
-questions.
+# Round six, when you want it: production-grade native
+
+Not written as a full prompt yet, because round five has to run first. Native
+answers whether the composition works; this answers whether the finish is
+right, and there is no point tuning the finish on a composition that failed.
+
+## What it actually is
+
+The register Glossier, Rhode and Topicals shoot in. It reads as casual and is
+not. **It looks unposed but nothing in it is accidental.**
+
+That makes it a narrow band between the two things generators do easily, which
+is why it is the hardest of the three to get:
+
+| | Native (round five) | Production-grade |
+|---|---|---|
+| Camera | phone, wide lens | real glass, 50mm or 85mm |
+| Light | whatever the window is doing | a large soft source *pretending* to be the window |
+| Grain | phone sensor noise | clean, or fine film grain by choice |
+| Colour | uncorrected | graded, consistent, quiet |
+| The room | genuinely messy | messy on purpose, every object placed |
+| Framing | slightly off, caught | looks casual, is exact |
+| Skin | real because the phone cannot hide it | real because they decided not to retouch it |
+
+The last row is the whole thing. Native gets honest skin for free. Production-grade has to **choose** it, which is why most brands in this register still
+retouch and why the prompt has to fight for it hardest here.
+
+## The deltas to apply to the round five prompt
+
+Keep every layout constraint — left 40 to 45 percent quiet, heads in the lower
+two thirds, parallel and not touching, modest coverage, 16:9. Change only:
+
+- `Candid phone photograph` becomes `Photographed on a 50mm lens at f/2.8`
+- `whatever the room is doing, not a lighting setup` becomes `one large soft
+  source from a window position, shaped so it reads as daylight`
+- `faint sensor grain, natural uncorrected colour` becomes `clean, fine film
+  grain, a quiet consistent grade`
+- `slightly imperfect framing, as if taken quickly` becomes `framing that
+  looks casual and is exact`
+- the room detail stays, but add: `every object deliberately placed to look
+  as though it was not`
+- keep the un-retouched paragraph **word for word**, and add: `this is a
+  campaign image that has not been retouched, which is the point`
+
+## Why this one may want a real shoot
+
+The other rounds were about avoiding what generators are bad at. This one
+asks for something they are bad at by definition: expensive restraint. A model
+pushed toward "campaign" tends to return either stock polish or a snapshot,
+and the space between is thin.
+
+Two women, pyjamas, a bed, a window and someone who can hold a camera steady
+gets there in an afternoon, and every constraint in round five works unchanged
+as a shot list.
