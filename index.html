@@ -173,9 +173,12 @@ section{padding-block:var(--gap)}
   from{opacity:0;transform:translateY(12px) scale(.95)}
   to  {opacity:1;transform:none}
 }
+/* The amplitude is a variable so the scroll handler can damp it to nothing as
+   the chip sets off. Floating and travelling at the same time reads as a wobble
+   rather than as a departure. */
 @keyframes ask-drift{
   0%,100%{transform:translateY(0)}
-  50%    {transform:translateY(-6px)}
+  50%    {transform:translateY(calc(-6px * var(--float,1)))}
 }
 @media (prefers-reduced-motion:reduce){
   .js .ask-i{opacity:1}
@@ -328,10 +331,16 @@ section{padding-block:var(--gap)}
     linear-gradient(0deg,  rgba(250,239,222,.18) 0%, rgba(250,239,222,.06) 18%,
                            rgba(250,239,222,0) 36%)
 }
+/* flex:1 so the inner claims the free height the hero has over its content,
+   which the old justify-content:flex-end was banking above the copy instead.
+   The pad then grows inside it and centres the copy, while the stats bar keeps
+   its place at the base. Alignment of the text itself is untouched: still ragged
+   right against the left edge of the column. */
 .hero-inner{
-  position:relative;width:100%;display:flex;flex-direction:column;
+  position:relative;width:100%;flex:1;display:flex;flex-direction:column;
   gap:clamp(1.75rem,4vw,2.75rem)
 }
+.hero-inner > .hero-pad{flex:1;display:flex;align-items:center}
 /* Hero runs edge to edge instead of inside the 74rem page container, so the
    copy sits flush bottom-left and the stat columns use the whole width. */
 .hero-pad{padding-inline:clamp(1.5rem,3.5vw,4rem)}
@@ -1305,7 +1314,10 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   /* hero-inner exists to group the copy and the stats bar. Dissolving its box
      lets both become flex children of .hero, so the film can be ordered
      between them. */
+  /* display:contents dissolves the box, so flex:1 on it is moot; the pad has
+     to give its own back or it would grow to fill the stacked column. */
   .hero-inner{display:contents}
+  .hero-inner > .hero-pad{flex:none;display:block}
   .hero-nav{order:1}
   .hero-inner > .hero-pad{order:2}
   .hero-media{order:3}
@@ -1458,9 +1470,9 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
          reachable by a screen reader, and it keeps the photograph a
          photograph. -->
     <div class="asks" aria-label="Questions a Skin Read answers">
-      <span class="ask ask-a" style="--x:44%;--y:11%"><span class="ask-i">Am I lacking hydration?</span></span>
-      <span class="ask ask-b" style="--x:71%;--y:14%"><span class="ask-i">Should I be doing that too?</span></span>
-      <span class="ask ask-c" style="--x:47%;--y:29%"><span class="ask-i">Is my skin really that dry?</span></span>
+      <span class="ask ask-a" style="--x:49%;--y:9%"><span class="ask-i">Am I lacking hydration?</span></span>
+      <span class="ask ask-b" style="--x:60%;--y:22%"><span class="ask-i">Should I be doing that too?</span></span>
+      <span class="ask ask-c" style="--x:52%;--y:34%"><span class="ask-i">Is my skin really that dry?</span></span>
     </div>
 
     <!-- Her questions, in the band above the faces. HTML rather than burned
@@ -2191,8 +2203,17 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
 
   // Hero questions. Hidden only while the script runs, so a failure leaves
   // them at rest and readable rather than invisible.
+  // rAF gives the browser a frame to register opacity:0 before the animation
+  // starts, so the entrance actually plays. But rAF is suspended while the page
+  // is in a background tab, and the chips are opacity:0 until this class lands —
+  // so on its own it can leave them invisible. The timeout is the floor: whichever
+  // fires first reveals them, and the second call is a no-op.
   var asks = document.querySelector('.asks');
-  if(asks) requestAnimationFrame(function(){ asks.classList.add('in'); });
+  if(asks){
+    var reveal = function(){ asks.classList.add('in'); };
+    requestAnimationFrame(reveal);
+    setTimeout(reveal, 120);
+  }
 
   // As the hero scrolls away the questions converge on its middle, growing as
   // they go, then fade. They are meant to read as the thought arriving rather
@@ -2205,8 +2226,19 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   if(asks && !(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches)){
     var hero  = document.querySelector('.hero');
     var chips = [].slice.call(asks.querySelectorAll('.ask'));
-    // A small head start each, so they do not fly in formation.
-    var lead  = [0, .10, .20];
+    // One at a time. Each question owns a window of the scroll and makes its
+    // whole trip inside it, so the next only sets off as the previous is
+    // fading. Overlapping head starts had all three swelling at once, which
+    // read as a single gesture rather than as three separate thoughts.
+    //
+    //   first   0.00 -> 0.36
+    //   second  0.32 -> 0.68
+    //   third   0.64 -> 1.00
+    //
+    // The 4% overlap is deliberate: the outgoing chip is under a tenth opacity
+    // by the time the next one starts moving, so the handover is covered
+    // without ever leaving the frame empty.
+    var STEP = .32, SPAN = .36;
     // And slightly different destinations, so the three do not stack into one
     // pill on the way out. They are near invisible by then, but three faint
     // outlines on the same spot still read as a smudge.
@@ -2219,14 +2251,22 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
       queued = false;
       if(!hero || getComputedStyle(asks).display === 'none') return;
       var r = hero.getBoundingClientRect();
-      // Measured over the first 70% of the hero, so the questions have resolved
-      // before the section itself is gone.
-      var p  = Math.min(1, Math.max(0, -r.top / (r.height * .7)));
-      var cx = r.width / 2, cy = r.height / 2;
+      // 55%, not 70%. Three trips run back to back now, and over a longer span
+      // the last one was still swelling after the top of the frame — where all
+      // three begin — had already left the window.
+      var p  = Math.min(1, Math.max(0, -r.top / (r.height * .55)));
+
+      // Converge on the middle of what is on screen, not the middle of the hero.
+      // Those are the same thing at rest and quite different once you have
+      // scrolled: aiming at the hero centre sent the second and third questions
+      // to a point that had already passed the top of the window, so they swelled
+      // out of sight. Clamped short of the base, which the stats bar covers.
+      var seen = (Math.max(0, r.top) + Math.min(innerHeight, r.bottom)) / 2 - r.top;
+      var cx = r.width / 2;
+      var cy = Math.min(r.height * .72, Math.max(r.height * .22, seen));
 
       chips.forEach(function(el, i){
-        var d = lead[i] || 0;
-        var t = Math.min(1, Math.max(0, (p - d) / (1 - d)));
+        var t = Math.min(1, Math.max(0, (p - i * STEP) / SPAN));
         var e = smooth(t);
         var ox = parseFloat(el.style.getPropertyValue('--x')) / 100 * r.width;
         var oy = parseFloat(el.style.getPropertyValue('--y')) / 100 * r.height;
@@ -2234,6 +2274,12 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
         el.style.setProperty('--dx', ((cx + to[0] - ox) * e).toFixed(1) + 'px');
         el.style.setProperty('--dy', ((cy + to[1] - oy) * e).toFixed(1) + 'px');
         el.style.setProperty('--sc', (1 + .95 * e).toFixed(3));
+        // The idle float hands over to the travel rather than running through it.
+        // The bob is damped to nothing across the first fifth of the trip, so a
+        // chip is only ever doing one of the two things — it floats until it is
+        // called, then it goes.
+        var pill = el.firstElementChild;
+        if(pill) pill.style.setProperty('--float', (1 - Math.min(1, e * 5)).toFixed(3));
         // Held at full opacity for the first half of the trip, so the growth is
         // seen before the fade starts eating it.
         var f = Math.min(1, Math.max(0, (e - .45) / .55));
@@ -2245,6 +2291,12 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
       if(queued) return;
       queued = true;
       requestAnimationFrame(place);
+      // The flag above latches if its callback never arrives, and rAF does not
+      // fire while the page is in a background tab — one dropped frame and the
+      // questions stop responding to scroll for the rest of the session. This
+      // timer is the floor. place() clears the flag itself, so whichever of the
+      // two arrives first unlatches, and the loser is a no-op.
+      setTimeout(place, 250);
     }
 
     addEventListener('scroll', onScroll, {passive:true});
