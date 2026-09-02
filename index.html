@@ -165,20 +165,43 @@ section{padding-block:var(--gap)}
 }
 /* Deliberately mismatched periods. Equal durations make three objects bob in
    lockstep, which reads as a carousel rather than as air. */
-.ask-a{--dur:7.3s} .ask-a .ask-i{animation-delay:.2s,  .95s}
-.ask-b{--dur:9.7s} .ask-b .ask-i{animation-delay:.45s, 1.2s}
-.ask-c{--dur:8.1s} .ask-c .ask-i{animation-delay:.7s,  1.45s}
+.ask-a{--dur:5.9s} .ask-a .ask-i{animation-delay:.2s,  .95s}
+.ask-b{--dur:7.6s} .ask-b .ask-i{animation-delay:.45s, 1.2s}
+.ask-c{--dur:6.7s} .ask-c .ask-i{animation-delay:.7s,  1.45s}
 
 @keyframes ask-in{
   from{opacity:0;transform:translateY(12px) scale(.95)}
   to  {opacity:1;transform:none}
 }
-/* The amplitude is a variable so the scroll handler can damp it to nothing as
-   the chip sets off. Floating and travelling at the same time reads as a wobble
-   rather than as a departure. */
+/* Every value is scaled by --float, which the scroll handler winds down to
+   zero as the chip sets off. Drifting and travelling at once reads as a wobble
+   rather than as a departure, so the idle motion hands over instead of fighting.
+
+   Five stops, none of them symmetrical, and the horizontal turns at different
+   points from the vertical. Two stops and a midpoint gave a metronome: every
+   chip visibly reversing at the same height on the same beat. Rising 17px and
+   dipping 4px past its rest, with a degree and a half of roll, is enough to
+   read across the frame — the earlier 6px lift was invisible at this size.
+
+   Amplitude is bounded by the gaps between the chips, which measure 35px at
+   the tightest, at 1025. Two neighbours swinging fully against each other close
+   that by 19px, and the roll adds about 4px of corner reach on each, so the
+   floor is roughly 12px of clear air. Sampling the live rects for eight seconds
+   never found closer than 35px — the three periods are 5.9, 7.6 and 6.7s, so
+   the adverse alignment is rare — but the bound is what matters, and it holds.
+   The downward dip is 2px rather than 4 for that reason: the rise is what
+   reads, so the dip is the cheap half to give back. */
 @keyframes ask-drift{
-  0%,100%{transform:translateY(0)}
-  50%    {transform:translateY(calc(-6px * var(--float,1)))}
+  0%  {transform:translate(0,0) rotate(0deg)}
+  22% {transform:translate(calc(  5px * var(--float,1)), calc( -9px * var(--float,1)))
+                 rotate(calc(-1.4deg * var(--float,1)))}
+  41% {transform:translate(calc( -2px * var(--float,1)), calc(-17px * var(--float,1)))
+                 rotate(calc(  .5deg * var(--float,1)))}
+  63% {transform:translate(calc( -6px * var(--float,1)), calc( -6px * var(--float,1)))
+                 rotate(calc( 1.3deg * var(--float,1)))}
+  84% {transform:translate(calc(  2px * var(--float,1)), calc(  2px * var(--float,1)))
+                 rotate(calc( -.5deg * var(--float,1)))}
+  100%{transform:translate(0,0) rotate(0deg)}
 }
 @media (prefers-reduced-motion:reduce){
   .js .ask-i{opacity:1}
@@ -659,6 +682,30 @@ section{padding-block:var(--gap)}
   list-style:none;margin:2.75rem 0 0;padding:0;
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
   gap:clamp(.85rem,1.4vw,1.15rem)
+}
+
+/* The four swell in as the list arrives, left to right. Only under .js, and the
+   undecorated rule above is already the finished state — so a script that never
+   runs leaves four cards sitting still rather than four that never appear.
+
+   The transform easing overshoots slightly where the opacity easing does not.
+   That is what makes it a swell rather than a slide: the card passes its
+   resting size by a hair and settles back, while the fade underneath stays
+   monotonic so nothing appears to flicker. */
+.js .signs li{
+  opacity:0;
+  transform:translateY(28px) scale(.93);
+  transition:opacity .62s var(--ease-out),
+             transform .92s cubic-bezier(.21,1.15,.32,1)
+}
+.js .signs.in li{opacity:1;transform:none}
+/* 90ms apart. Much less and the four read as one block; much more and the
+   fourth is still arriving after the reader has started on the first. */
+.js .signs.in li:nth-child(2){transition-delay:.09s}
+.js .signs.in li:nth-child(3){transition-delay:.18s}
+.js .signs.in li:nth-child(4){transition-delay:.27s}
+@media (prefers-reduced-motion:reduce){
+  .js .signs li{opacity:1;transform:none;transition:none}
 }
 /* Fixed column counts, not auto-fit: four items only ever want 4, 2 or 1 across.
    auto-fit finds three columns at some widths and orphans the fourth. */
@@ -2213,6 +2260,46 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
     var reveal = function(){ asks.classList.add('in'); };
     requestAnimationFrame(reveal);
     setTimeout(reveal, 120);
+  }
+
+  // The four recognition cards swell in when the row arrives. Threshold .15 so
+  // it fires as the top of the row clears the fold rather than after the reader
+  // is already looking at it.
+  //
+  // The cards sit at opacity:0 until .in lands, so whatever reveals them has to
+  // be dependable. The observer is the primary trigger. Its first callback does
+  // not count: it reports not-intersecting for anything below the fold, and if
+  // the observer then never fires again the row stays invisible for good.
+  //
+  // That is not hypothetical. The hero questions had the same shape through
+  // requestAnimationFrame and did stay invisible whenever rAF was suspended, and
+  // observer callbacks were seen stalling for a second here at 45% visibility.
+  // So there is a floor underneath: a cheap rect check that reveals the row and
+  // then stops. On a browser with no observer at all, reveal at once — the cards
+  // are the content.
+  var signs = document.querySelector('.signs');
+  if(signs){
+    if('IntersectionObserver' in window){
+      var signsIO = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(!en.isIntersecting) return;
+          signsIO.unobserve(en.target);
+          en.target.classList.add('in');
+        });
+      }, {threshold: .15});
+      signsIO.observe(signs);
+
+      var signsPoll = setInterval(function(){
+        if(signs.classList.contains('in')){ clearInterval(signsPoll); return; }
+        var b = signs.getBoundingClientRect();
+        if(b.top < innerHeight * .9 && b.bottom > 0){
+          signs.classList.add('in');
+          clearInterval(signsPoll);
+        }
+      }, 300);
+    } else {
+      signs.classList.add('in');
+    }
   }
 
   // As the hero scrolls away the questions converge on its middle, growing as
