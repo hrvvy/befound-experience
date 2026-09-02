@@ -273,7 +273,10 @@ section{padding-block:var(--gap)}
 .hero-media{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--hero-sand)}
 .hero-media img{
   width:100%;height:100%;object-fit:cover;
-  object-position:center;
+  /* The frame is 2.008 against a 1.799 box, so 166px comes off the width. All
+     of it should come off the left, which is empty linen, rather than be split
+     evenly and clip the masked woman at the right edge. */
+  object-position:64% center;
   display:block
 }
 /* Two washes rather than one. The copy now sits bottom-left, so the vertical
