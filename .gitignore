@@ -11,3 +11,8 @@ Thumbs.db
 desktop.ini
 .impeccable/
 
+
+# Internal positioning notes. GitHub Pages serves every file on the branch, so
+# anything committed here is publicly readable — this one carries the answers to
+# client pushback and is not for that audience.
+hero-concept.md
