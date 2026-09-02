@@ -12,7 +12,11 @@ desktop.ini
 .impeccable/
 
 
-# Internal positioning notes. GitHub Pages serves every file on the branch, so
-# anything committed here is publicly readable — this one carries the answers to
-# client pushback and is not for that audience.
+# Working notes. GitHub Pages serves every file on the branch, so anything
+# committed here is publicly readable. These are not for that audience: the
+# prompt logs document how the imagery was made, and the other two carry the
+# open items on live claims and the answers prepared for client pushback.
+hero-prompts.md
+card-image-spec.md
 hero-concept.md
+NOTES.md
