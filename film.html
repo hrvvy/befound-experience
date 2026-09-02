@@ -1,0 +1,2094 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Skin Read | BeFound Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=Montserrat:wght@400;600;700&display=swap">
+<style>
+/* ============================================================
+   BeFound Skin Read lander
+   Palette is entirely BeFound's own, taken off /skin-read/ and
+   /experience/. The only change is which colour carries the page:
+   cream is the ground, navy becomes ink, clay is the single accent.
+   ============================================================ */
+:root{
+  --cream:#FAEFDE;
+  --blush:#EFDED4;
+  --blush-soft:#F3E4CE;
+  --navy:#142B49;
+  --navy-deep:#0C1B30;
+  --navy-black:#091423;
+  --slate:#3E4E66;
+  --muted:#69758A;
+  --clay:#CB6D51;
+  --rust:#A04528;
+  --gold:#E8AE1E;
+  --line:#E8D7C4;
+  --line-dark:rgba(250,239,222,.16);
+  --hero-sand:#D9C6AB;
+
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Montserrat",-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+
+  --pad:clamp(1.25rem,5vw,2.5rem);
+  --gap:clamp(3.5rem,9vw,7rem);
+  --measure:38rem;
+  --radius:14px;   /* people and photographs are round */
+
+  /* Built-in CSS easings are too weak to read as intentional. */
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-in-out:cubic-bezier(.77,0,.175,1);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--cream);
+  color:var(--navy);
+  font-family:var(--sans);
+  font-size:17px;
+  line-height:1.72;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{max-width:100%;display:block}
+.wrap{max-width:74rem;margin:0 auto;padding-inline:var(--pad)}
+.narrow{max-width:var(--measure)}
+
+/* ---------- type ---------- */
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.012em}
+h1{
+  font-size:clamp(2.9rem,7vw,5.25rem);line-height:1.02;
+  margin:0;text-wrap:balance
+}
+h2{
+  font-size:clamp(2rem,4.4vw,3.15rem);line-height:1.1;
+  margin:0 0 1.5rem;text-wrap:balance
+}
+h3{font-size:clamp(1.3rem,2.2vw,1.65rem);line-height:1.22;margin:0 0 .55rem}
+p{margin:0 0 1.15rem;max-width:var(--measure)}
+p:last-child{margin-bottom:0}
+em{font-style:italic}
+.lede{font-size:clamp(1.1rem,1.7vw,1.3rem);line-height:1.62;color:var(--slate)}
+.eyebrow{
+  font-family:var(--sans);font-size:.7rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--rust);
+  margin:0 0 1.4rem
+}
+.eyebrow.on-dark{color:var(--blush)}
+
+/* ---------- sections ---------- */
+section{padding-block:var(--gap)}
+.band-blush{background:var(--blush-soft)}
+
+/* Dark bands are rounded slabs rather than full-bleed stripes: the corners let
+   the page ground show through, so a section arcs into the next one instead of
+   butting against it on a hard horizontal line.
+   The radius only goes where a LIGHT neighbour sits. A corner reveals the body
+   colour, so rounding an edge that meets the hero would cut cream notches into
+   the sand stats bar. */
+/* Arcs run northwards: each slab rounds its TOP and is pulled up by exactly one
+   radius so it overlaps the section above. Two reasons it goes this way and not
+   the other. Scrolling down, the top edge is the one you meet, so the curve
+   lands as an arrival rather than a farewell. And a corner reveals whatever is
+   painted BEHIND it, which is the body colour, not the neighbour: without the
+   overlap, a slab sitting under a blush section cuts cream notches into it.
+   The overlap only ever eats section padding. */
+:root{--arc:clamp(26px,3.4vw,60px)}
+/* The cream carries the arc, not the navy. It rounds its top and is pulled up
+   by exactly one radius so it overlaps the dark slab above, which is what makes
+   the corners reveal that slab rather than the body colour behind it.
+   Northwards, because scrolling down you meet the top edge first, so the curve
+   reads as the warm section arriving rather than the dark one leaving. */
+.band-navy + section,.band-dark + section{
+  position:relative;
+  background:var(--cream);
+  border-radius:var(--arc) var(--arc) 0 0;
+  margin-top:calc(-1 * var(--arc))
+}
+/* The arc needs an explicit background, otherwise the dark band shows through
+   the negative margin. But at (0,1,1) it was also outranking .band-blush at
+   (0,1,0) and quietly repainting any blush section that followed a dark one.
+   The arc is geometry; the band still owns its own colour. */
+.band-navy + section.band-blush,
+.band-dark + section.band-blush{background:var(--blush-soft)}
+
+.band-dark{background:var(--navy-deep);color:var(--cream)}
+.band-dark h2,.band-dark h3{color:var(--cream)}
+.band-dark p{color:rgba(250,239,222,.82)}
+
+/* ---------- nav ---------- */
+/* Nav lives inside the hero, laid over the film with no bar of its own. */
+.hero-nav{
+  position:absolute;top:0;left:0;right:0;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:1rem;padding-block:clamp(1rem,1.8vw,1.6rem)
+}
+/* The top of the hero carries no scrim, so the nav sits directly on whatever
+   the film is showing. Both items get their own ground rather than a band
+   across the top, which would undo the full-bleed opening. */
+/* The logo sits top-left, which is empty backdrop in the film, so it needs no
+   plate behind it. The button top-right does, because that side is the group. */
+/* Glass, and it can go much thinner than the stats bar. Navy on the blurred
+   backdrop holds 5.74:1 even at .28 alpha, where the bar's slate labels bottomed
+   out at .80. Dark text buys transparency. */
+/* No fill at all. The cream tint WAS the beige: a coloured film sitting on top
+   of an already-warm backdrop. The lift now comes from brightness() applied to
+   what is behind, with saturation pulled back, so the glass clarifies the
+   backdrop instead of painting over it. */
+.hero-nav .btn.ghost{
+  background:transparent;
+  /* No cast shadow. A drop shadow makes this read as a raised physical button
+     floating above the surface, which is the opposite of glass. Glass is flush:
+     a rim and a lit top edge, nothing beneath it. */
+  border-color:rgba(20,43,73,.38);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+  /* Blur and nothing else. Any colour operation at all, up OR down, makes the
+     inside of the pill a different colour from the outside, and that reads as
+     a fill no matter how subtle it is. Pure blur leaves the colour identical,
+     so only the edge tells you the object is there. */
+  -webkit-backdrop-filter:blur(24px);
+  backdrop-filter:blur(24px)
+}
+/* Sharp image behind unblurred glass is unreadable, so fall back to solid. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .hero-nav .btn.ghost{background:rgba(250,239,222,.88);border-color:rgba(20,43,73,.5)}
+}
+@media (hover:hover) and (pointer:fine){
+  .hero-nav .btn.ghost:hover{background:var(--navy);border-color:var(--navy);color:var(--cream)}
+}
+/* The mark is 270x300, so it is sized by height and left to find its own
+   width. alt is empty because the link already carries the accessible name. */
+.wordmark{display:inline-flex;align-items:center;text-decoration:none}
+.wordmark img{height:clamp(30px,3.2vw,42px);width:auto;display:block}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:.55rem;
+  font-family:var(--sans);font-size:.83rem;font-weight:700;
+  letter-spacing:.055em;text-transform:uppercase;
+  background:var(--clay);color:var(--cream);
+  text-decoration:none;border:1px solid var(--clay);
+  padding:1rem 1.65rem;border-radius:999px;
+  transition:background 160ms var(--ease-out),border-color 160ms var(--ease-out),
+             transform 160ms var(--ease-out);
+}
+.btn.sm{padding:.7rem 1.2rem;font-size:.74rem}
+.btn.ghost{background:transparent;color:var(--navy);border-color:var(--navy)}
+.btn.on-dark{background:var(--clay);border-color:var(--clay);color:var(--cream)}
+.btn .arw{transition:transform 160ms var(--ease-out)}
+
+/* Hover is gated so a tap on touch does not leave the button stuck lit. */
+@media (hover:hover) and (pointer:fine){
+  .btn:hover{background:var(--rust);border-color:var(--rust);transform:translateY(-1px)}
+  .btn:hover .arw{transform:translateX(3px)}
+  .btn.ghost:hover{background:var(--navy);color:var(--cream)}
+}
+/* Declared last so the press always wins over hover. */
+.btn:active{transform:scale(.97)}
+/* Shared rail so every mid-page CTA sits the same distance from the content
+   above it and reads as the same offer rather than three different ones. */
+.cta-rail{
+  text-align:center;
+  margin-top:clamp(2.4rem,4.5vw,3.4rem);
+  padding-top:clamp(2rem,3.5vw,2.6rem);
+  border-top:1px solid var(--line)
+}
+.band-dark .cta-rail{border-top-color:var(--line-dark)}
+.cta-rail .cta-note{margin-inline:auto}
+
+.cta-note{
+  font-size:.82rem;color:var(--muted);margin:.95rem 0 0;
+  letter-spacing:.01em
+}
+.band-dark .cta-note{color:rgba(250,239,222,.6)}
+
+/* ---------- hero: full-bleed 16:9 film ---------- */
+/* Full-bleed, bottom-anchored. 62vw is the ceiling that matters: past it the
+   hero is taller than the film is wide, and `cover` starts slicing people off
+   the right edge instead of trimming headroom. At 62vw that side-crop is held
+   to about 10%, and on a true 16:9 screen it is zero and the hero runs the
+   full viewport. */
+.hero{
+  position:relative;isolation:isolate;
+  min-height:min(100svh,62vw);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-block:clamp(3rem,7vw,5rem) 0
+}
+/* --hero-sand is sampled from the film's own backdrop (#D7C3A8 to #DDCCB0).
+   Scrimming in the footage's colour rather than the page cream is what keeps
+   the blend invisible instead of banding across the middle of the frame. */
+.hero-media{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--hero-sand)}
+.hero-media video{
+  width:100%;height:100%;object-fit:cover;
+  object-position:left center;   /* crop from the right; the empty left is the point */
+  display:block
+}
+/* Two washes rather than one. The copy now sits bottom-left, so the vertical
+   wash carries most of the legibility and the horizontal one can be gentler,
+   which keeps more of the group unveiled than the old centred layout did. */
+.hero-scrim{
+  position:absolute;inset:0;z-index:-1;
+  background:
+    /* Reaches higher than before: the copy block is tall, and the old wash had
+       already faded to nothing by the time it reached the headline. */
+    linear-gradient(0deg,  rgba(217,198,171,.96) 0%, rgba(217,198,171,.9) 24%,
+                           rgba(217,198,171,.72) 44%, rgba(217,198,171,.4) 62%,
+                           rgba(217,198,171,.12) 78%, rgba(217,198,171,0) 90%),
+    linear-gradient(90deg, rgba(217,198,171,.92) 0%, rgba(217,198,171,.82) 34%,
+                           rgba(217,198,171,.55) 50%, rgba(217,198,171,.22) 64%,
+                           rgba(217,198,171,0) 80%)
+}
+.hero-inner{
+  position:relative;width:100%;display:flex;flex-direction:column;
+  gap:clamp(1.75rem,4vw,2.75rem)
+}
+/* Hero runs edge to edge instead of inside the 74rem page container, so the
+   copy sits flush bottom-left and the stat columns use the whole width. */
+.hero-pad{padding-inline:clamp(1.5rem,3.5vw,4rem)}
+
+/* Numbers as a divided bar along the base of the hero.
+   The bar carries its own ground rather than borrowing the scrim. Relying on
+   the gradient left the right-hand columns on 0.77 opacity over a terracotta
+   dress and an olive blazer, which small type cannot survive. At .94 sand it
+   matches what the scrim already resolves to on the left, so the band reads as
+   part of the hero rather than a slab laid on top of it. */
+/* Glass rather than a painted band. The heavy blur is what makes this work:
+   it dissolves the footage into soft colour fields, so the tint can drop to
+   .8 and still hold the labels at 4.52:1. Measured, not guessed. Below .8 the
+   12.8px labels fall under AA over the busier columns. */
+.hero-stats{
+  border-top:1px solid rgba(255,255,255,.4);
+  box-shadow:inset 0 -1px 0 rgba(20,43,73,.06);
+  background:rgba(217,198,171,.8);
+  -webkit-backdrop-filter:blur(44px) saturate(1.45) brightness(1.03);
+  backdrop-filter:blur(44px) saturate(1.45) brightness(1.03)
+}
+/* Without backdrop-filter the image behind stays sharp and .8 is unreadable,
+   so those browsers get the solid band instead. */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .hero-stats{background:rgba(217,198,171,.95);border-top-color:rgba(20,43,73,.14)}
+}
+.hero-stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding-block:clamp(1.1rem,1.8vw,1.6rem)
+}
+/* Cells stretch so the dividers run full height, content centres inside them. */
+.hero-stats-grid > div{
+  display:flex;flex-direction:column;justify-content:center;
+  padding-inline:clamp(1rem,2vw,2rem)
+}
+/* First column keeps the page edge so it lines up with the headline above. */
+.hero-stats-grid > div:first-child{padding-inline-start:0}
+.hero-stats-grid > div + div{border-left:1px solid rgba(20,43,73,.16)}
+.hero-stats .n{
+  font-family:var(--serif);font-size:clamp(1.35rem,1.9vw,1.75rem);
+  line-height:1.05;color:var(--navy);font-variant-numeric:tabular-nums
+}
+.hero-stats .l{
+  font-size:.8rem;line-height:1.4;color:var(--slate);
+  margin-top:.35rem;max-width:24ch
+}
+/* One colour, one weight. The line break at the full stop does the work that a
+   contrasting accent word would otherwise be faking. No max-width: the <br>
+   sets the breaks, so the headline scales with the viewport instead of being
+   squeezed into a column. */
+/* The clear zone in the film is only 34% of the width, so the headline is
+   sized against that rather than against the viewport. A bigger vw coefficient
+   looks better in isolation and then runs straight across someone's face. */
+.hero h1{
+  font-size:clamp(1.85rem,3.1vw,3.5rem);
+  line-height:1.06;letter-spacing:-.02em;color:var(--navy);
+  max-width:none
+}
+/* The lede keeps a measure. Everything else widens, but a line of body copy
+   past roughly 70 characters gets genuinely harder to read, wide screen or not. */
+/* Capped as a share of the hero as well as in characters, so the lede tracks
+   the film's clear zone instead of running out across the group on wide screens. */
+.hero .lede{
+  margin-top:1.25rem;max-width:min(44ch,46%);
+  font-size:clamp(.96rem,.95vw,1.08rem);line-height:1.62
+}
+/* The diagnosis and the answer are two thoughts, so they get two blocks. The
+   gap lands the beat right before the call to action. */
+.hero .lede + .lede{margin-top:1rem}
+.hero-copy{max-width:none}
+/* Below roughly 1386px the base rule already resolves to 56.25vw, which is
+   exactly 16:9, so the film is uncropped and nothing here needs changing.
+   Past that the 780px cap starts biting and the crop grows with the width.
+   max() is what keeps this safe: on a wide but SHORT screen 88vh can be less
+   than 780px, and without it this rule would shrink the hero and make the crop
+   worse than before. It can only ever grow. */
+@media (min-width:1400px){
+  .hero{min-height:min(56.25vw, max(780px, 88vh))}
+  @supports (height:1dvh){
+    .hero{min-height:min(56.25vw, max(780px, 88dvh))}
+  }
+}
+
+/* No film for anyone who asked for less movement. */
+@media (prefers-reduced-motion:reduce){ .hero-media video{display:none} }
+/* ---------- villain cycle ---------- */
+/* Top-aligned, not centred. Centring two columns of unequal height means
+   neither shares an edge with anything, which is what made this read as
+   misaligned even though the grid was correct. */
+.villain-grid{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,38rem);
+  gap:clamp(2rem,5vw,4.5rem);align-items:start
+}
+/* The pull quote now closes the left column instead of floating below the grid
+   in an L shape, which also brings the two column heights close together. */
+.villain-grid .belief{margin-top:clamp(2rem,3.5vw,3rem)}
+/* Optical, not mechanical: the heading's cap sits a few px below its box top
+   while the first node chip starts at its box top, so a true 0/0 alignment
+   still reads as the ring sitting high. */
+.cycle{margin:.4rem 0 0}
+.cycle-ring{position:relative;width:100%;max-width:34rem;margin-inline:auto;aspect-ratio:1}
+.cycle-ring svg{width:100%;height:100%;display:block;overflow:visible}
+.ring-track{
+  fill:none;stroke:var(--line);stroke-width:1.5;
+  stroke-dasharray:2 7;stroke-linecap:round
+}
+/* One lit arc chasing the loop. Rotating a stroked circle is cheap: it is a
+   transform on a single element, so it never touches layout. */
+.ring-lit{
+  fill:none;stroke:var(--clay);stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:80 548;                      /* circumference is ~628 */
+  transform-origin:150px 150px
+}
+.ring-spin{transform-origin:150px 150px;animation:ring-turn 12s linear infinite}
+@keyframes ring-turn{to{transform:rotate(360deg)}}
+.ring-tip{fill:none;stroke:var(--clay);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+
+/* Positioned as a share of the container, not in pixels. The ring is an SVG
+   circle whose radius is a RATIO of the viewBox, so it grows with the box; a
+   fixed px offset only lines up at one width and floats free at every other. */
+.node{
+  position:absolute;transform:translate(-50%,-50%);
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  width:10rem;padding:.85rem .7rem;
+  background:var(--cream);border:1px solid var(--line);border-radius:12px;
+  font-size:1rem;line-height:1.35;text-align:center;color:var(--slate);
+  transition:border-color 400ms var(--ease-out),color 400ms var(--ease-out)
+}
+.node b{
+  font-family:var(--serif);font-size:1.75rem;line-height:1;color:var(--rust);
+  font-variant-numeric:lining-nums tabular-nums
+}
+/* r=100 in a 300 viewBox is 33.33% of the box, so the compass points sit at
+   50% +/- 33.33%. The dashed track passes behind each chip. */
+.n1{left:50%;top:16.67%}
+.n2{left:83.33%;top:50%}
+.n3{left:50%;top:83.33%}
+.n4{left:16.67%;top:50%}
+/* Each stage lights as the arc reaches it: 12s loop, one quarter each. */
+.node{animation:node-lit 12s linear infinite}
+.n1{animation-delay:0s}
+.n2{animation-delay:-9s}
+.n3{animation-delay:-6s}
+.n4{animation-delay:-3s}
+@keyframes node-lit{
+  0%,18%{border-color:var(--clay);color:var(--navy)}
+  30%,100%{border-color:var(--line);color:var(--slate)}
+}
+/* Sized as body copy, not as a footnote. It is the diagram's conclusion, so it
+   reads at the same weight as the paragraphs beside it rather than shrinking
+   into caption grey. */
+.cycle figcaption{
+  margin-top:1.9rem;
+  font-size:clamp(1.04rem,1.1vw,1.22rem);line-height:1.5;
+  color:var(--slate);
+  max-width:30rem;margin-inline:auto;text-align:center
+}
+/* Explanatory motion, but nobody needs a spinning ring forced on them. */
+@media (prefers-reduced-motion:reduce){
+  .ring-spin,.node{animation:none}
+  .ring-lit{display:none}
+  .node{border-color:var(--clay)}
+}
+/* ---------- cost ledger ---------- */
+/* Full-width rows with rules between them: the section reads as an itemised
+   list of what this has cost, which is a better shape for the argument than a
+   two-column text block with a diagram parked beside it. */
+.cost-head{max-width:46rem;margin-bottom:clamp(2rem,3.5vw,2.75rem)}
+.cost-head h2{max-width:20ch}
+.cost-head .lede{max-width:44ch}
+/* Two up. Stacked full width, four rows of one short line each left most of the
+   measure empty and made the section far taller than its content warranted. */
+.ledger{
+  list-style:none;margin:0;padding:0;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:clamp(2rem,5vw,4.5rem);
+  border-bottom:1px solid var(--line)
+}
+.ledger li{
+  display:grid;grid-template-columns:2rem minmax(0,1fr);
+  gap:1.1rem;align-items:baseline;
+  padding:clamp(1.1rem,1.7vw,1.45rem) 0;
+  border-top:1px solid var(--line)
+}
+/* Roman numerals, not arabic: these are entries in a ledger, not steps in a
+   sequence, and the reader should not read an order into them. */
+.ledger-n{
+  font-family:var(--serif);font-style:italic;
+  font-size:1.05rem;color:var(--rust);letter-spacing:.02em
+}
+.ledger-t{
+  font-size:clamp(1rem,1.1vw,1.14rem);line-height:1.42;color:var(--navy)
+}
+.cost-close{
+  margin-top:clamp(1.75rem,2.8vw,2.25rem);max-width:none;
+  font-family:var(--serif);font-size:clamp(1.4rem,2.4vw,2.1rem);
+  line-height:1.25;letter-spacing:-.012em;color:var(--navy)
+}
+.cost-close em{font-style:italic;color:var(--rust)}
+/* ---------- scroll cue ---------- */
+/* Straddles the seam between the hero and the section below, which is what
+   makes it read as a handle on the join rather than a floating badge. It is a
+   real anchor link, not decoration, so keyboard and screen reader users get
+   the same shortcut. */
+.scroll-cue-wrap{display:flex;justify-content:center;position:relative;z-index:3;height:0}
+/* Vertical pill, no label. The travelling dot is the whole affordance, so it
+   carries an aria-label in place of the text it used to have. */
+.scroll-cue{
+  position:relative;
+  display:inline-flex;justify-content:center;align-items:flex-start;
+  width:30px;height:48px;padding-top:9px;
+  transform:translateY(-50%);
+  background:var(--cream);border:1px solid var(--line);
+  border-radius:999px;text-decoration:none;
+  box-shadow:0 10px 26px -14px rgba(20,43,73,.32);
+  transition:border-color 160ms var(--ease-out)
+}
+.scroll-cue .dot{
+  width:4px;height:8px;border-radius:999px;background:var(--clay);
+  animation:cue-travel 2.4s cubic-bezier(.4,0,.2,1) infinite
+}
+/* Fades in at the top, travels down, fades out. Reads as direction rather
+   than as a bouncing object. */
+@keyframes cue-travel{
+  0%{transform:translateY(0);opacity:0}
+  18%{opacity:1}
+  62%{transform:translateY(19px);opacity:0}
+  100%{transform:translateY(19px);opacity:0}
+}
+@media (hover:hover) and (pointer:fine){
+  .scroll-cue:hover{border-color:var(--clay)}
+}
+.scroll-cue:active{transform:translateY(-50%) scale(.96)}
+/* Reduced motion still needs the dot visible, just parked. */
+@media (prefers-reduced-motion:reduce){
+  .scroll-cue .dot{opacity:1;transform:translateY(4px)}
+}
+
+/* Navy, not the deepest navy: the scan section keeps #0C1B30 so the page reads
+   as a hierarchy of darks rather than three identical slabs. Dark ground is
+   what makes the card fan work at all. Cream cards on a blush band were six
+   luminance points apart, so edges and shadows had nothing to separate from. */
+.band-navy{background:var(--navy);color:var(--cream)}
+/* Centred intro. The deck below is a symmetrical object, so a left-aligned
+   heading above it left the section fighting itself. */
+#recognise .narrow{margin-inline:auto;text-align:center}
+#recognise .narrow .lede{margin-inline:auto}
+.band-navy h2,.band-navy h3{color:var(--cream)}
+.band-navy .lede,.band-navy p{color:rgba(250,239,222,.8)}
+
+/* ---------- recognition cards ---------- */
+
+/* Four peers, all readable at once. The subhead asks the reader to count how
+   many apply to her, which is impossible if three of them are behind a blur. */
+.signs-wrap{
+  max-width:96rem;margin-inline:auto;
+  padding-inline:clamp(1.5rem,3vw,3rem)
+}
+.signs{
+  list-style:none;margin:2.75rem 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(.85rem,1.4vw,1.15rem)
+}
+/* Fixed column counts, not auto-fit: four items only ever want 4, 2 or 1 across.
+   auto-fit finds three columns at some widths and orphans the fourth. */
+/* Capped as the columns drop, or two cards at 3/4 balloon to 500x667 and the
+   section turns into a scroll. */
+/* Image is the whole card face; copy sits over a gradient at the base. */
+.card{
+  position:relative;overflow:hidden;isolation:isolate;
+  display:block;width:100%;aspect-ratio:3/4;
+  background:var(--navy-deep);border:1px solid rgba(250,239,222,.14);
+  border-radius:20px;
+  box-shadow:0 24px 50px -30px rgba(0,0,0,.65)
+}
+.card-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;z-index:-1
+}
+.card-body{
+  position:absolute;inset:auto 0 0 0;
+  display:flex;flex-direction:column;gap:.55rem;
+  padding:clamp(1.1rem,2vw,1.5rem);
+  background:linear-gradient(0deg,
+    rgba(9,20,35,.94) 0%, rgba(9,20,35,.82) 38%,
+    rgba(9,20,35,.42) 70%, rgba(9,20,35,0) 100%)
+}
+.card-num{
+  font-family:var(--serif);font-size:clamp(1.7rem,2.4vw,2.2rem);
+  line-height:.9;color:var(--clay);font-variant-numeric:lining-nums tabular-nums
+}
+.card-txt{font-size:.96rem;line-height:1.45;color:var(--cream)}
+/* Border only. These cards do not go anywhere, and a lift or an image zoom is
+   the grammar of a link, so it would promise a click that never lands. */
+@media (hover:hover) and (pointer:fine){
+  .card{transition:border-color 240ms var(--ease-out)}
+  .card:hover{border-color:rgba(203,109,81,.62)}
+}
+
+/* ---------- before / after sliders ---------- */
+/* Strict two up. auto-fit was fitting three across and orphaning the fourth,
+   and narrower cards lose the facial detail that is the whole proof. */
+.ba-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(1rem,2vw,1.6rem);margin-top:clamp(2.5rem,5vw,3.5rem)
+}
+.ba{margin:0}
+.ba-stage{
+  position:relative;overflow:hidden;border-radius:var(--radius);
+  aspect-ratio:4/5;background:var(--navy-deep);
+  touch-action:pan-y            /* let the page still scroll vertically on a drag */
+}
+.ba-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;user-select:none;-webkit-user-drag:none;pointer-events:none
+}
+/* The BEFORE sits on top and is clipped back to the handle. Clipping rather
+   than resizing keeps both faces at identical scale, which is the whole point
+   of a comparison: any size difference reads as a result. */
+.ba-before{clip-path:inset(0 calc(100% - var(--pos)) 0 0)}
+.ba-tag{
+  position:absolute;top:.9rem;z-index:2;pointer-events:none;
+  font-size:.62rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--cream);background:rgba(9,20,35,.62);
+  padding:.35rem .6rem;border-radius:6px;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)
+}
+.ba-tag-before{left:.9rem}
+.ba-tag-after{right:.9rem}
+.ba-divider{
+  position:absolute;top:0;bottom:0;left:var(--pos);z-index:3;
+  width:2px;margin-left:-1px;background:var(--cream);
+  box-shadow:0 0 0 1px rgba(9,20,35,.18);pointer-events:none
+}
+.ba-knob{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:2.4rem;height:2.4rem;border-radius:999px;
+  background:var(--cream);box-shadow:0 4px 16px -4px rgba(9,20,35,.5);
+  display:grid;place-items:center
+}
+/* Two chevrons drawn with borders: the affordance has to say "drag me sideways"
+   without an icon file. */
+.ba-knob::before,.ba-knob::after{
+  content:"";position:absolute;top:50%;width:.38rem;height:.38rem;
+  border-top:2px solid var(--navy);border-right:2px solid var(--navy)
+}
+.ba-knob::before{left:.5rem;transform:translateY(-50%) rotate(-135deg)}
+.ba-knob::after{right:.5rem;transform:translateY(-50%) rotate(45deg)}
+/* A real range input, visually hidden over the stage. Free keyboard support,
+   a proper accessible name, and arrow keys that work without any JS of mine. */
+.ba-range{
+  position:absolute;inset:0;z-index:4;width:100%;height:100%;
+  margin:0;opacity:0;cursor:ew-resize;appearance:none;-webkit-appearance:none;
+  background:transparent
+}
+.ba-range::-webkit-slider-thumb{appearance:none;width:3rem;height:100%}
+.ba-range::-moz-range-thumb{width:3rem;height:100%;border:0;background:transparent}
+.ba-range:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+.ba-cap{
+  position:absolute;inset:auto 0 0 0;z-index:2;pointer-events:none;
+  padding:clamp(1rem,2vw,1.4rem);
+  background:linear-gradient(0deg,rgba(9,20,35,.9) 0%,rgba(9,20,35,.7) 45%,rgba(9,20,35,0) 100%)
+}
+.ba-cap blockquote{
+  margin:0 0 .45rem;font-style:italic;
+  font-size:clamp(.92rem,1.05vw,1.02rem);line-height:1.4;color:var(--cream)
+}
+.ba-cap cite{
+  font-style:normal;font-size:.66rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--blush)
+}
+
+/* ---------- pull quote / belief ---------- */
+.belief{
+  font-family:var(--serif);font-size:clamp(1.75rem,3.7vw,2.75rem);
+  line-height:1.18;letter-spacing:-.015em;max-width:26ch;margin:0
+}
+.belief .hit{color:var(--clay);font-style:italic}
+
+/* ---------- the instrument (dark scan section) ---------- */
+/* ---------- the skin read ---------- */
+
+/* The render is 16:9 with its left half deliberately black, and the section is
+   far taller. object-fit:cover across the whole section would scale to the
+   height and crop away that dark half, so the image is pinned to the top at
+   its own ratio and the band's navy carries on beneath it. */
+.read{position:relative;isolation:isolate;overflow:hidden}
+.read-media{
+  position:absolute;top:0;left:0;right:0;
+  aspect-ratio:16/9;z-index:-2;pointer-events:none
+}
+.read-media img{
+  width:100%;height:100%;object-fit:cover;
+  object-position:center top;display:block
+}
+.read-media::after{
+  content:"";position:absolute;inset:0;
+  background:
+    /* Melts the lower edge into the band so the timeline is not sitting on a
+       seam. Clear of her face, which is in the top quarter. */
+    linear-gradient(0deg,  rgba(12,27,48,1) 0%, rgba(12,27,48,.9) 14%,
+                           rgba(12,27,48,.6) 34%, rgba(12,27,48,.24) 56%,
+                           rgba(12,27,48,.06) 72%, rgba(12,27,48,0) 84%),
+    /* Light touch. The frame is already black on the left, so a heavy scrim
+       there just double-darkens; this softens the vertical edge where the
+       black meets the lit room. */
+    linear-gradient(90deg, rgba(12,27,48,.62) 0%, rgba(12,27,48,.55) 30%,
+                           rgba(12,27,48,.4) 44%, rgba(12,27,48,.14) 58%,
+                           rgba(12,27,48,0) 72%)
+}
+/* Everything stacks into the dark half. A two-column grid put the readout card
+   at 53-91% of the viewport, which is exactly where the subject is, so the
+   panel sat over her face and the photograph had nothing left to show. The
+   right side of this section now carries no content at all: that is the whole
+   composition, and it is what the reference does too. */
+.read .scan-grid{
+  display:block;
+  max-width:min(46%,33rem)
+}
+.read .readout{margin-top:clamp(2rem,3.5vw,2.75rem)}
+.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(2rem,5vw,4.5rem);align-items:center}
+.readout{
+  background:var(--navy-black);border:1px solid var(--line-dark);
+  border-radius:var(--radius);padding:clamp(1.5rem,3vw,2.2rem)
+}
+.readout .rhead{
+  display:flex;justify-content:space-between;align-items:baseline;
+  gap:1rem;padding-bottom:1.1rem;margin-bottom:1.4rem;
+  border-bottom:1px solid var(--line-dark)
+}
+.readout .rhead .t{
+  font-size:.68rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--blush)
+}
+.readout .rhead .s{font-size:.68rem;letter-spacing:.08em;color:var(--muted)}
+/* The dome photographs one face under eight named light modes and hands back
+   a contact sheet, so the card is that contact sheet. Eight tiles, one
+   silhouette, eight treatments, named as the device names them. */
+.modes{
+  list-style:none;margin:0 0 1.4rem;padding:0;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem
+}
+.mode{
+  display:flex;flex-direction:column;gap:.45rem;
+  padding:.55rem .5rem .6rem;
+  background:rgba(250,239,222,.045);
+  border:1px solid rgba(250,239,222,.1);border-radius:9px
+}
+.mode .fx{
+  display:block;width:100%;height:auto;aspect-ratio:160/150;
+  background:rgba(9,20,35,.55);border-radius:6px
+}
+/* Named .sk so it can never collide with a generic .fill utility. */
+.mode .sk{fill:rgba(250,239,222,.14)}
+.mode .sk.dark{fill:rgba(9,20,35,.9)}
+.mode .edge{fill:none;stroke:rgba(250,239,222,.4);stroke-width:1.4}
+.mode .mesh path{fill:none;stroke:rgba(250,239,222,.34);stroke-width:1}
+.mode .blot ellipse{fill:rgba(203,109,81,.42)}
+.mode .dots.pale circle{fill:rgba(250,239,222,.5)}
+.mode .dots.clay circle{fill:rgba(203,109,81,.85)}
+.mode .dots.gold circle{fill:rgba(250,187,5,.78)}
+.mode .dots.fine circle{fill:rgba(250,187,5,.5)}
+/* Only "Collagenous fibre" runs to two lines; the min-height keeps every tile
+   the same height so the grid does not step. */
+.m-n{
+  font-family:var(--sans);font-size:.55rem;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;line-height:1.35;
+  color:rgba(250,239,222,.72);text-align:center;min-height:2.7em
+}
+/* The dome sweeps as it exposes. One pass per tile, staggered, so the grid
+   reads as a sequence of captures rather than eight things blinking at once. */
+.mode .sweep{opacity:0}
+.js .mode .sweep{opacity:1;animation:fxsweep 3.8s var(--ease-in-out) infinite}
+.js .m-spot    .sweep{animation-delay:.19s}
+.js .m-pigment .sweep{animation-delay:.38s}
+.js .m-sens    .sweep{animation-delay:.57s}
+.js .m-pimple  .sweep{animation-delay:.76s}
+.js .m-metal   .sweep{animation-delay:.95s}
+.js .m-porph   .sweep{animation-delay:1.14s}
+.js .m-fibre   .sweep{animation-delay:1.33s}
+@keyframes fxsweep{
+  0%,74%,100%{transform:translateY(0)}
+  37%{transform:translateY(184px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .js .mode .sweep{animation:none;opacity:0}
+}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.readout .fine{
+  font-size:.72rem;color:var(--muted);margin:0;
+  padding-top:1.2rem;border-top:1px solid var(--line-dark)
+}
+
+/* ---------- booking ---------- */
+
+/* Acuity renders its own white UI with its own type, so rather than fight it
+   the frame sits in a plain white panel and is presented as a panel: the seam
+   then reads as deliberate instead of as a page that changed its mind. */
+.booking{
+  margin-top:clamp(2rem,4vw,3rem);
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:0 30px 60px -34px rgba(20,43,73,.28)
+}
+.booking-frame{display:block;width:100%;border:0;min-height:820px}
+.booking-where{
+  max-width:44rem;margin:clamp(1.4rem,2.5vw,1.9rem) auto 0;
+  font-size:.92rem;line-height:1.6;color:var(--slate);text-align:center
+}
+.booking-where strong{color:var(--navy);font-weight:600}
+
+/* ---------- daphne ---------- */
+
+/* Copy left, a phone-shaped video right. The footage is vertical because she
+   shot it on a phone, and cropping it to landscape would quietly undo the one
+   thing it has going for it: that it obviously was not made by us. */
+.daphne{
+  display:grid;grid-template-columns:1fr minmax(0,20rem);
+  gap:clamp(2rem,5vw,4.5rem);align-items:center
+}
+.daphne-pull{
+  font-family:var(--serif);font-size:clamp(1.3rem,2vw,1.65rem);
+  line-height:1.28;color:var(--cream);
+  margin:clamp(1.6rem,3vw,2.2rem) 0 0;
+  padding-top:clamp(1.4rem,2.5vw,1.9rem);
+  border-top:1px solid var(--line-dark)
+}
+.daphne-media{
+  position:relative;margin:0;
+  border-radius:var(--radius);overflow:hidden;
+  background:var(--navy-deep);
+  box-shadow:0 34px 70px -30px rgba(0,0,0,.72)
+}
+.daphne-video{
+  display:block;width:100%;height:auto;aspect-ratio:9/16;
+  object-fit:cover;background:var(--navy-deep)
+}
+/* Sits over the film, so it earns the glass treatment rather than a flat chip. */
+.daphne-badge{
+  position:absolute;top:.85rem;left:.85rem;
+  font-family:var(--sans);font-size:.6rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--navy);
+  background:rgba(250,239,222,.82);
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+  padding:.42rem .7rem;border-radius:6px;
+  box-shadow:0 2px 10px -4px rgba(9,20,35,.5)
+}
+
+/* ---------- minute by minute ---------- */
+
+/* The machine is the part nobody has seen, and describing a dome does not do
+   what showing one does. Sits between the headline and the cards so the reader
+   knows what room she is in before being told how the time in it is spent. */
+.studio{
+  margin:clamp(2rem,3.5vw,2.75rem) 0 0;
+  border-radius:var(--radius);overflow:hidden;
+  background:var(--blush-soft);
+  box-shadow:0 28px 56px -32px rgba(20,43,73,.32)
+}
+.studio img{display:block;width:100%;height:auto}
+.studio figcaption{
+  font-size:.82rem;line-height:1.5;color:var(--slate);
+  background:#fff;padding:.85rem clamp(1rem,2vw,1.4rem);
+  border-top:1px solid var(--line)
+}
+
+/* Three equal cards. Not auto-fit: three items find two columns at some widths
+   and orphan the third, the same trap the sliders hit. */
+.mins{
+  list-style:none;counter-reset:none;margin:clamp(2.2rem,4vw,3rem) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(1rem,1.8vw,1.4rem)
+}
+.mins li{
+  background:#fff;border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:clamp(1.4rem,2.4vw,1.9rem)
+}
+/* "Minutes 30 to 45 - What is possible" runs to two lines while the others sit
+   on one, so without a floor the three card titles start at different heights
+   and the row visibly steps. */
+.mins-when{
+  font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--rust);
+  line-height:1.5;min-height:3em;margin:0 0 .5rem
+}
+.mins li h3{
+  font-family:var(--sans);font-size:1.06rem;font-weight:700;
+  letter-spacing:0;line-height:1.3;color:var(--navy);margin:0 0 .6rem
+}
+.mins li p:last-child{
+  font-size:.97rem;line-height:1.6;color:var(--muted);margin:0;max-width:none
+}
+.mins-close{
+  font-family:var(--serif);font-size:clamp(1.35rem,2.2vw,1.75rem);
+  line-height:1.28;color:var(--navy);
+  margin:clamp(2rem,3.5vw,2.6rem) 0 0;max-width:30ch
+}
+
+/* ---------- client stories ---------- */
+
+/* Built like the Daphne block: native video, poster, controls, no autoplay.
+   Three of them, so the section is dark - three bright 9:16 frames on cream
+   read as a contact sheet of strangers, while on navy they read as screens. */
+.stories{position:relative;isolation:isolate}
+.stories::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:radial-gradient(120% 90% at 18% 0%, rgba(62,78,102,.5) 0%, rgba(12,27,48,0) 62%)
+}
+.stories-grid{
+  list-style:none;margin:clamp(2.4rem,4.5vw,3.4rem) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(1rem,2vw,1.6rem)
+}
+.story{
+  display:flex;flex-direction:column;
+  background:rgba(250,239,222,.05);
+  border:1px solid rgba(250,239,222,.12);
+  border-radius:var(--radius);overflow:hidden;
+  box-shadow:0 30px 60px -34px rgba(0,0,0,.7)
+}
+.story-video{
+  display:block;width:100%;height:auto;aspect-ratio:9/16;
+  object-fit:cover;background:var(--navy-deep)
+}
+.story-meta{padding:clamp(1rem,1.8vw,1.3rem)}
+.story-meta h3{
+  font-family:var(--sans);font-size:1.02rem;font-weight:700;
+  letter-spacing:0;color:var(--cream);margin:0 0 .5rem
+}
+.story-tag{
+  font-family:var(--sans);font-size:.66rem;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;line-height:1.5;
+  color:var(--muted);margin:0 0 .9rem
+}
+/* The outcome is the only thing on the card that is a result rather than a
+   label, so it is the only thing that gets the clay. */
+.story-out{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-family:var(--sans);font-size:.66rem;font-weight:700;
+  letter-spacing:.09em;text-transform:uppercase;line-height:1.45;
+  color:var(--clay);border:1px solid rgba(203,109,81,.5);
+  border-radius:999px;padding:.5rem .85rem;margin:0;max-width:none
+}
+.story-dot{
+  flex:0 0 auto;width:.36rem;height:.36rem;border-radius:999px;
+  background:var(--clay)
+}
+
+/* ---------- reviews ---------- */
+
+/* Summary card first, then the reviews themselves. The card carries the number
+   and the source; the cards carry the voices. */
+.score{
+  display:flex;flex-wrap:wrap;align-items:center;
+  gap:clamp(1.2rem,3vw,2.4rem);
+  max-width:38rem;margin:clamp(1.8rem,3vw,2.4rem) auto 0;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(1.3rem,2.4vw,1.8rem) clamp(1.5rem,3vw,2.2rem);
+  box-shadow:0 22px 46px -30px rgba(20,43,73,.28)
+}
+.score-l{text-align:center;flex:0 0 auto}
+.score-r{
+  flex:1 1 14rem;min-width:12rem;
+  padding-left:clamp(1.2rem,3vw,2.4rem);border-left:1px solid var(--line)
+}
+.score-n{
+  font-family:var(--serif);font-size:clamp(2.6rem,5vw,3.3rem);
+  line-height:.9;color:var(--navy);margin:0 0 .45rem;
+  font-variant-numeric:lining-nums tabular-nums
+}
+.score-c{font-size:.74rem;color:var(--muted);margin:.55rem 0 0}
+.score-src{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:var(--sans);font-size:.92rem;font-weight:700;
+  color:var(--navy);margin:0 0 .3rem
+}
+.score-claim{font-size:.86rem;line-height:1.5;color:var(--slate);margin:0}
+.rv-g{width:1.15rem;height:1.15rem;flex:0 0 auto}
+
+.rv-stars{display:inline-flex;gap:.12rem;color:var(--gold)}
+.rv-stars svg{
+  width:.86rem;height:.86rem;overflow:visible;
+  stroke:#B87D00;stroke-width:1.1;stroke-linejoin:round;paint-order:stroke fill
+}
+.score-stars svg{width:1.05rem;height:1.05rem}
+
+/* Real masonry. A grid would leave a ragged bottom edge under nine reviews of
+   wildly different length; columns let each card sit directly under the one
+   above it. */
+.reviews{
+  list-style:none;margin:clamp(2.2rem,4vw,3rem) 0 0;padding:0;
+  columns:3;column-gap:clamp(1rem,1.8vw,1.4rem)
+}
+.rv{
+  break-inside:avoid;-webkit-column-break-inside:avoid;
+  background:#fff;border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(1.1rem,2vw,1.4rem);
+  margin:0 0 clamp(1rem,1.8vw,1.4rem)
+}
+.rv-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.75rem}
+/* Palette-derived, not Google's avatar colours: this is our page carrying a
+   Google attribution, not an embedded widget. */
+.rv-av{
+  flex:0 0 auto;width:2.3rem;height:2.3rem;border-radius:999px;
+  display:grid;place-items:center;
+  font-family:var(--sans);font-size:.95rem;font-weight:700;color:var(--cream)
+}
+.rv-a .rv-av{background:var(--navy)}
+.rv-b .rv-av{background:#8C4A34}
+.rv-c .rv-av{background:var(--slate)}
+.rv-d .rv-av{background:var(--rust)}
+.rv-e .rv-av{background:#54496A}
+.rv-id{flex:1 1 auto;min-width:0}
+.rv-name{font-family:var(--sans);font-size:.92rem;font-weight:700;color:var(--navy);margin:0}
+.rv-sub{font-size:.72rem;color:var(--muted);margin:.1rem 0 0}
+.rv-rate{display:flex;align-items:center;gap:.6rem;margin:0 0 .7rem}
+.rv-when{font-size:.72rem;color:var(--muted)}
+.rv p{font-size:.92rem;line-height:1.6;color:var(--slate);margin:0;max-width:none}
+.rv-list{margin:.5rem 0;padding-left:1.05rem}
+.rv-list li{font-size:.92rem;line-height:1.6;color:var(--slate);margin-bottom:.35rem}
+.rv-list li::marker{color:var(--clay)}
+.rv .rv-list + p{margin-top:.7rem}
+
+/* ---------- advantages ---------- */
+
+/* Six drawn marks rather than a sixth card treatment: the page already carries
+   white cards twice, dark video cards and the navy scan tiles, so another
+   panel would read as more of the same. An icon gives each item an anchor
+   without adding a container. */
+.adv{
+  list-style:none;margin:clamp(2.4rem,4vw,3.2rem) 0 0;padding:0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(2rem,3.4vw,3rem) clamp(1.8rem,3vw,2.8rem)
+}
+/* A white disc on navy is a hole punched in the band, so the well is a light
+   film over it instead. Rust drops to 2.29:1 on this ground; clay holds 3.97:1,
+   which is the floor for a graphic that carries meaning. */
+.adv-ic{
+  display:grid;place-items:center;
+  width:3rem;height:3rem;margin-bottom:1rem;
+  border-radius:999px;
+  background:rgba(250,239,222,.06);
+  border:1px solid rgba(250,239,222,.18);
+  box-shadow:0 12px 24px -16px rgba(0,0,0,.7)
+}
+.adv-ic svg{
+  width:1.45rem;height:1.45rem;
+  fill:none;stroke:var(--clay);stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round
+}
+.adv h3{
+  font-family:var(--serif);font-size:1.14rem;line-height:1.25;
+  color:var(--cream);margin:0 0 .45rem
+}
+.adv p{
+  font-size:.95rem;line-height:1.6;
+  color:rgba(250,239,222,.72);margin:0;max-width:34ch
+}
+
+/* ---------- founder ---------- */
+.founder{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,5vw,4rem);align-items:center}
+.founder img{
+  width:100%;height:auto;aspect-ratio:4/5;
+  object-fit:cover;object-position:50% 20%;
+  border-radius:var(--radius)
+}
+.claim{
+  font-family:var(--serif);font-size:clamp(1.5rem,2.8vw,2.15rem);
+  line-height:1.2;margin:0 0 1.3rem;max-width:22ch
+}
+.claim .hit{color:var(--rust);font-style:italic}
+.fstats{display:flex;flex-wrap:wrap;gap:1.75rem;margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+.fstats div{min-width:7rem}
+.fstats .n{font-family:var(--serif);font-size:1.75rem;line-height:1;color:var(--rust)}
+.fstats .l{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.35rem}
+
+/* ---------- promise / close ---------- */
+/* Centred, with a clay dot marking each promise and a hairline between them.
+   The dot is the only clay in the section, so it reads as a ledger of things
+   the studio is committing to rather than three more paragraphs. */
+.promises{
+  list-style:none;margin:clamp(2.2rem,4vw,3rem) auto 0;padding:0;
+  max-width:46rem;
+  border-top:1px solid var(--line-dark)
+}
+.promises li{
+  border-bottom:1px solid var(--line-dark);
+  padding:clamp(1.6rem,3vw,2.2rem) 0;text-align:center
+}
+.promises li::before{
+  content:"";display:block;width:.45rem;height:.45rem;
+  margin:0 auto .95rem;border-radius:999px;background:var(--clay)
+}
+.promises p{
+  margin:0 auto;font-size:1rem;line-height:1.62;
+  max-width:52ch;color:rgba(250,239,222,.72)
+}
+.promises strong{color:var(--cream);font-weight:700}
+.close-box{text-align:center;max-width:44rem;margin-inline:auto}
+.close-box p{margin-inline:auto}
+.close-facts{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.5rem;
+  margin-top:1.6rem;font-size:.78rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;color:rgba(250,239,222,.72)
+}
+
+/* ---------- faq ---------- */
+.faq{max-width:48rem;margin-inline:auto}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{
+  cursor:pointer;list-style:none;padding:1.35rem 2.5rem 1.35rem 0;
+  font-weight:600;font-size:1.04rem;position:relative;color:var(--navy)
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{
+  content:"";position:absolute;right:.4rem;top:1.85rem;
+  width:.62rem;height:.62rem;border-right:2px solid var(--clay);
+  border-bottom:2px solid var(--clay);transform:rotate(45deg);
+  transition:transform 200ms var(--ease-out)
+}
+.faq details[open] summary::after{transform:rotate(-135deg)}
+.faq .ans{padding:0 0 1.5rem;color:var(--slate);font-size:.99rem;max-width:44rem}
+/* Content should not appear from nothing. Rarely triggered, so keyframes are fine. */
+.faq details[open] .ans{animation:faqIn 220ms var(--ease-out) both}
+@keyframes faqIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+/* ---------- footer ---------- */
+footer{background:var(--navy-deep);color:var(--cream);padding-block:3.5rem 2.5rem}
+.foot{
+  display:grid;grid-template-columns:1fr auto;
+  gap:clamp(2rem,5vw,4rem);align-items:start
+}
+/* The monogram file is navy on transparent, which is invisible here. Painting
+   it through a mask uses only its alpha, so the mark takes the cream rather
+   than needing a second colourway exported. */
+.foot-mark{
+  display:block;width:2.5rem;height:2.78rem;margin-bottom:1.15rem;
+  background:var(--cream);
+  -webkit-mask:url("befound-logo.png") left center/contain no-repeat;
+  mask:url("befound-logo.png") left center/contain no-repeat
+}
+.foot-id p{max-width:26rem}
+.foot-connect .eyebrow{color:var(--clay);margin-bottom:1.1rem}
+.foot-connect ul{list-style:none;margin:0;padding:0;display:grid;gap:.85rem}
+.foot-connect a{
+  color:rgba(250,239,222,.82);text-decoration:none;font-size:.98rem;
+  transition:color 160ms var(--ease-out)
+}
+@media (hover:hover) and (pointer:fine){
+  .foot-connect a:hover{color:var(--cream)}
+}
+.foot-connect a:focus-visible{outline:2px solid var(--clay);outline-offset:3px;border-radius:3px}
+footer p{color:rgba(250,239,222,.66);font-size:.92rem;line-height:1.6;max-width:34rem}
+footer .fine{
+  margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line-dark);
+  font-size:.78rem;color:rgba(250,239,222,.56)
+}
+
+/* ---------- a11y + motion ---------- */
+a:focus-visible,summary:focus-visible,.btn:focus-visible{
+  outline:2px solid var(--clay);outline-offset:3px;border-radius:4px
+}
+/* Reduced motion means fewer and gentler animations, not none. Colour and
+   opacity still aid comprehension, so they stay. Movement goes. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    transition-property:opacity,color,background-color,border-color,filter !important;
+    transition-duration:200ms !important;
+    animation:none !important;
+  }
+  .btn:active{transform:none}
+}
+
+/* ---------- responsive ---------- */
+
+/* ============================================================
+   Two breakpoints, not fourteen. 900px collapses multi-column
+   layouts; 640px is the phone pass. Every component that used to
+   carry its own near-miss breakpoint (1080, 1000, 920, 880, 860,
+   760, 720, 600, 560, 520) now collapses on one of these two, so
+   the page changes shape twice instead of ten times.
+   ============================================================ */
+@media (max-width:900px){
+  /* Hero: the film stops being a backdrop and becomes a block of its own,
+     below the copy. Laying text over a 16:9 film only works while there is
+     horizontal room for the empty left third; in a narrow column the subject
+     and the words fight for the same pixels, and the scrim has to be pushed so
+     opaque that the film may as well not be there. Stacked, the copy sits on
+     clean cream and the film is finally seen at its own aspect ratio. */
+  .hero{
+    min-height:auto;
+    padding-block:0 0;
+    gap:clamp(1.75rem,5vw,2.5rem)
+  }
+  /* The nav is absolute on desktop so it can float over the film. Stacked,
+     there is nothing to float over: left absolute it sat outside the flow and
+     printed straight through the eyebrow. */
+  .hero-nav{
+    position:static;
+    /* The flex gap already gives 28px below. The extra bottom padding takes it
+       to about 44px, which a small-caps eyebrow needs to read as a new zone
+       rather than as a third nav item. */
+    padding-block:clamp(1.1rem,4vw,1.6rem) clamp(.5rem,2.5vw,1rem)
+  }
+  /* hero-inner exists to group the copy and the stats bar. Dissolving its box
+     lets both become flex children of .hero, so the film can be ordered
+     between them. */
+  .hero-inner{display:contents}
+  .hero-nav{order:1}
+  .hero-inner > .hero-pad{order:2}
+  .hero-media{order:3}
+  .hero-stats{order:4}
+
+  /* 16:9 in a 327px column is a 184px strip and the group reads as specks.
+     A 4:3 crop trades the empty left third, which the copy no longer needs,
+     for a third more height and faces at a size worth looking at. */
+  .hero-media{
+    position:static;overflow:hidden;
+    aspect-ratio:4/3;
+    margin-inline:clamp(1.5rem,3.5vw,4rem);
+    border-radius:var(--radius)
+  }
+  /* Biased right: the group starts around a third into the frame, so a centred
+     crop would clip them at the far edge. */
+  .hero-media video{object-position:68% center}
+  /* The scrim exists to make text legible over the film. Nothing sits over it
+     now, so it would only mute the picture. */
+  .hero-scrim{display:none}
+
+  .hero-stats-grid{grid-template-columns:repeat(2,1fr);gap:.9rem 0}
+  .hero-stats-grid > div:nth-child(3){padding-inline-start:0;border-left:0}
+  .hero-stats-grid > div:nth-child(-n+2){padding-bottom:.9rem;border-bottom:1px solid rgba(20,43,73,.16)}
+  /* Backdrop blur samples what is behind the element; with the film moved out
+     from under it there is nothing to sample, so the tint becomes flat colour. */
+  .hero-stats{
+    background:var(--blush-soft);
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+    border-top:1px solid var(--line)
+  }
+
+  /* one column */
+  .villain-grid,.scan-grid,.founder,.stories-grid,.mins,.daphne,.ba-grid,.foot,.ledger{
+    grid-template-columns:1fr
+  }
+  .stories-grid{max-width:24rem;margin-inline:auto}
+  .mins{max-width:34rem}
+  .daphne{max-width:34rem;margin-inline:auto}
+  .foot{gap:2.4rem}
+  .ledger{column-gap:0}
+  .ledger li{grid-template-columns:1.8rem minmax(0,1fr);gap:.9rem}
+  .cycle-ring{max-width:23rem}
+  .node{width:7.25rem;font-size:.86rem;padding:.6rem .5rem}
+
+  /* two columns */
+  .signs{grid-template-columns:repeat(2,minmax(0,1fr));max-width:48rem;margin-inline:auto}
+  .adv{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .reviews{columns:2}
+  .modes{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+  /* the skin read photograph */
+  .read .scan-grid{max-width:none}
+  .read-media{aspect-ratio:5/4}
+  .read-media img{object-position:82% top}
+  .read-media::after{
+    background:linear-gradient(0deg, rgba(12,27,48,1) 0%, rgba(12,27,48,.97) 46%,
+               rgba(12,27,48,.86) 78%, rgba(12,27,48,.78) 100%)
+  }
+}
+
+@media (max-width:640px){
+  body{font-size:16px}
+
+  /* One gutter. Three containers were setting their own page inset with three
+     different clamps, and at 375px they bottomed out at 20px (--pad), 24px
+     (.hero-pad) and 24px (.signs-wrap). Every visual asset now measures the
+     same width and every left edge lines up down the page. 24px because it is
+     the more comfortable phone gutter and two of the three already used it. */
+  :root{--pad:1.5rem}
+  .hero-pad,.signs-wrap{padding-inline:var(--pad)}
+  .hero-media{margin-inline:var(--pad)}
+
+  /* The hero lede was capped at min(44ch,46%). On a phone 46% resolves against
+     a 327px column, so both paragraphs rendered 150px wide: nineteen characters
+     a line, and a hero 949px tall on an 812px screen. */
+  .hero .lede{max-width:none}
+
+  /* single column */
+  .signs{grid-template-columns:1fr;max-width:22rem}
+  .adv{grid-template-columns:1fr;max-width:26rem}
+  /* Nine stacked cards ran 4.7 screens and gave no sense of how many were
+     left. A snap carousel is the native phone pattern for self-contained
+     cards: all nine stay in the DOM, and the 84% width lets the next one peek
+     so the swipe is discoverable without a hint. */
+  .reviews{
+    columns:auto;display:flex;gap:.85rem;
+    overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    padding-bottom:.5rem;
+    scrollbar-width:none;-ms-overflow-style:none
+  }
+  .reviews::-webkit-scrollbar{display:none}
+  .reviews:focus-visible{outline:2px solid var(--rust);outline-offset:4px;border-radius:var(--radius)}
+  .rv{
+    flex:0 0 84%;margin:0;
+    scroll-snap-align:center;scroll-snap-stop:always
+  }
+  .modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .booking-frame{min-height:1000px}
+
+  /* Label type had drifted as low as 8.8px once the clamps bottomed out. These
+     are labels, not body copy, but 8.8px is not readable at arm's length. */
+  .m-n{font-size:.72rem;letter-spacing:.06em}
+  .daphne-badge,.ba-tag{font-size:.7rem}
+  /* cite is an element here, not a class */
+  .ba-cap cite,.story-tag,.mins-when,.readout .rhead .t,.readout .rhead .s{font-size:.74rem}
+  .eyebrow{font-size:.74rem;letter-spacing:.16em}
+  .rv-when,.score-c,.rv-sub{font-size:.78rem}
+  .fine,.close-facts,.readout .fine{font-size:.8rem}
+
+  /* Every tap target clears 44px. The footer links were 19px tall, and the
+     wordmark and scroll cue were under 30px wide. */
+  .foot-connect a{display:inline-block;padding-block:.78rem}
+  .foot-connect ul{gap:0}
+  .hero-nav .wordmark{
+    display:inline-flex;align-items:center;justify-content:flex-start;
+    min-width:44px;min-height:44px
+  }
+  /* The pill is a deliberate 30x48. Rather than distort it, the hit area is
+     grown with a pseudo-element so the shape stays and the thumb gets 44px. */
+  .scroll-cue::after{
+    content:"";position:absolute;top:50%;left:50%;
+    transform:translate(-50%,-50%);width:48px;height:48px
+  }
+}
+</style>
+</head>
+<body>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-media">
+    <!-- Drop hero.mp4 + hero-poster.jpg into this folder and the film goes live.
+         Poster renders on its own until then, and for reduced-motion visitors. -->
+    <video autoplay muted loop playsinline preload="metadata"
+           poster="hero-poster.jpg" aria-hidden="true" tabindex="-1">
+      <source src="hero.mp4" type="video/mp4">
+    </video>
+    <div class="hero-scrim"></div>
+  </div>
+
+  <nav class="hero-nav hero-pad">
+    <a class="wordmark" href="#top" aria-label="BeFound Studios, back to top">
+      <img src="befound-logo.png" alt="" width="270" height="300" decoding="async">
+    </a>
+    <a class="btn sm ghost" href="#book">Book a Skin Read <span class="arw">&rarr;</span></a>
+  </nav>
+
+  <div class="hero-inner">
+    <div class="hero-pad">
+      <div class="hero-copy">
+        <p class="eyebrow">Barrier first, everything else after.</p>
+        <h1>Your skin isn't sensitive.<br>It's your barrier that's thin.</h1>
+        <p class="lede">If your skin keeps reacting to products, adding stronger ones isn't always the answer. A weakened barrier can make even good ingredients feel irritating.</p>
+        <p class="lede">A Skin Read shows you what your skin actually needs, so you can stop guessing and start treating it properly.</p>
+        <p style="margin-top:1.75rem"><a class="btn" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a></p>
+        <p class="cta-note">Free &middot; 45 mins &middot; One-on-one at our studio</p>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-pad hero-stats-grid">
+        <div><div class="n">2,000+</div><div class="l">ladies achieved radiant, dewy skin with BeFound</div></div>
+        <div><div class="n">10+ years</div><div class="l">of helping ladies build a strong skin barrier</div></div>
+        <div><div class="n">0</div><div class="l">products prescribed in the studio</div></div>
+        <div><div class="n">45 mins</div><div class="l">and you leave with clarity on your skin</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="scroll-cue-wrap">
+  <a class="scroll-cue" href="#recognise" aria-label="Scroll to see if this sounds like your skin">
+    <span class="dot"></span>
+  </a>
+</div>
+
+<!-- ============ RECOGNITION ============ -->
+<section class="band-navy" id="recognise">
+  <div class="wrap">
+    <div class="narrow">
+      <h2>Four things women say right before they finally get their barrier read.</h2>
+      <p class="lede">If two of these are true, the problem is not which product you are using. It is what all of them have been doing to the same layer of skin.</p>
+    </div>
+  </div>
+
+  <div class="signs-wrap">
+    <ul class="signs">
+      <li><article class="card"><img class="card-img" src="cards/sign-1.jpg" width="720" height="960" alt="" loading="lazy" decoding="async"><span class="card-body"><span class="card-num">1</span><span class="card-txt">Your skin stings or flushes after cleansing, and you have started calling that normal</span></span></article></li>
+      <li><article class="card"><img class="card-img" src="cards/sign-2.jpg" width="720" height="960" alt="" loading="lazy" decoding="async"><span class="card-body"><span class="card-num">2</span><span class="card-txt">You have a drawer of products that worked for three weeks and then stopped</span></span></article></li>
+      <li><article class="card"><img class="card-img" src="cards/sign-3.jpg" width="720" height="960" alt="" loading="lazy" decoding="async"><span class="card-body"><span class="card-num">3</span><span class="card-txt">Everything either does nothing or breaks you out, with no middle ground</span></span></article></li>
+      <li><article class="card"><img class="card-img" src="cards/sign-4.jpg" width="720" height="960" alt="" loading="lazy" decoding="async"><span class="card-body"><span class="card-num">4</span><span class="card-txt">You were fine at 22. Now your skin reacts to things it never used to.</span></span></article></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ VILLAIN ============ -->
+<section>
+  <div class="wrap">
+    <div class="villain-grid">
+      <div>
+        <h2>It is not your fault.</h2>
+        <p>You were consistent with your skin upkeep. You read the labels. You gave things time. You did everything you were told to do. Yet you don't see any improvements.</p>
+        <p>The skincare market oversimplified women's skin into four broad buckets. Dry, oily, combination, sensitive.</p>
+        <p>But the truth is, no two skin barriers are the same. An ingredient that transformed your friend, or an influencer with <em>similar</em> skin, can quietly thin yours. Same ingredient, different barrier, opposite result.</p>
+        <p><strong>Each and every one of us has a skin barrier that is unique to us. Just like our fingerprint.</strong></p>
+        <p class="belief">Barrier first,<br><span class="hit">everything else after.</span></p>
+
+      </div>
+
+
+      <figure class="cycle" role="img"
+              aria-label="A four stage loop: saw it recommended, tried what worked for her, skin reacted, barrier thinner, and back to the beginning.">
+        <div class="cycle-ring">
+          <svg viewBox="0 0 300 300" aria-hidden="true" focusable="false">
+            <circle class="ring-track" cx="150" cy="150" r="100"/>
+            <g class="ring-spin"><circle class="ring-lit" cx="150" cy="150" r="100"/></g>
+            <!-- direction markers, tangential, clockwise -->
+            <path class="ring-tip" d="M-5 -4 L4 0 L-5 4" transform="translate(220.7 79.3) rotate(45)"/>
+            <path class="ring-tip" d="M-5 -4 L4 0 L-5 4" transform="translate(220.7 220.7) rotate(135)"/>
+            <path class="ring-tip" d="M-5 -4 L4 0 L-5 4" transform="translate(79.3 220.7) rotate(225)"/>
+            <path class="ring-tip" d="M-5 -4 L4 0 L-5 4" transform="translate(79.3 79.3) rotate(315)"/>
+          </svg>
+          <span class="node n1"><b>1</b>Saw it recommended</span>
+          <span class="node n2"><b>2</b>Tried what worked for her</span>
+          <span class="node n3"><b>3</b>Skin reacted</span>
+          <span class="node n4"><b>4</b>Barrier thinner</span>
+        </div>
+        <figcaption>The loop keeps returning to the start because nothing in it was ever matched to your barrier.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HIDDEN COST ============ -->
+<section class="band-blush">
+  <div class="wrap">
+    <div class="cost-head">
+      <h2>The hidden cost of not knowing your own skin barrier.</h2>
+      <p class="lede">A drawer of half-used bottles is the cost you can see. But it is also the smallest one. What is more costly is navigating blindfolded, without truly understanding the right ingredients to build a healthy skin barrier.</p>
+    </div>
+
+    <ol class="ledger">
+      <li><span class="ledger-n" aria-hidden="true">i</span><span class="ledger-t">Treating what you can see, while the cause underneath keeps getting worse</span></li>
+      <li><span class="ledger-n" aria-hidden="true">ii</span><span class="ledger-t">Using ingredients that quietly thin the barrier you are trying to protect</span></li>
+      <li><span class="ledger-n" aria-hidden="true">iii</span><span class="ledger-t">Paying for improvements that fade before the bottle is empty</span></li>
+      <li><span class="ledger-n" aria-hidden="true">iv</span><span class="ledger-t">Carrying the mental load of researching and testing every single product</span></li>
+    </ol>
+
+    <p class="cost-close">Every one of them is about what you put <em>on</em> your skin.<br>Not one of them is about the layer underneath.</p>
+  </div>
+</section>
+
+<!-- ============ BEFORE / AFTER ============ -->
+<section>
+  <div class="wrap">
+    <div class="narrow">
+      <h2>What a barrier that holds actually gives you.</h2>
+      <p class="lede">Real clients, unretouched, shot on their own phones. Drag any of them.</p>
+    </div>
+    <div class="ba-grid">
+
+      <figure class="ba">
+        <div class="ba-stage" style="--pos:86%">
+          <img class="ba-img ba-after"  src="ba/larissa-after.jpg"  alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <img class="ba-img ba-before" src="ba/larissa-before.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <span class="ba-tag ba-tag-before">Before</span>
+          <span class="ba-tag ba-tag-after">After</span>
+          <span class="ba-divider" aria-hidden="true"><span class="ba-knob"></span></span>
+          <input class="ba-range" type="range" min="0" max="100" value="86" step="0.1"
+                 aria-label="Drag to compare Larissa&rsquo;s skin before and after">
+          <figcaption class="ba-cap">
+            <blockquote>&ldquo;I finally understand what my skin actually needs. The results speak for themselves.&rdquo;</blockquote>
+            <cite>Larissa</cite>
+          </figcaption>
+        </div>
+      </figure>
+
+      <figure class="ba">
+        <div class="ba-stage" style="--pos:86%">
+          <img class="ba-img ba-after"  src="ba/chermaine-after.jpg"  alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <img class="ba-img ba-before" src="ba/chermaine-before.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <span class="ba-tag ba-tag-before">Before</span>
+          <span class="ba-tag ba-tag-after">After</span>
+          <span class="ba-divider" aria-hidden="true"><span class="ba-knob"></span></span>
+          <input class="ba-range" type="range" min="0" max="100" value="86" step="0.1"
+                 aria-label="Drag to compare Chermaine&rsquo;s skin before and after">
+          <figcaption class="ba-cap">
+            <blockquote>&ldquo;I didn’t realise my routine was making my skin worse. Once we rebuilt it properly, everything made sense.&rdquo;</blockquote>
+            <cite>Chermaine</cite>
+          </figcaption>
+        </div>
+      </figure>
+
+      <figure class="ba">
+        <div class="ba-stage" style="--pos:86%">
+          <img class="ba-img ba-after"  src="ba/aqilah-after.jpg"  alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <img class="ba-img ba-before" src="ba/aqilah-before.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <span class="ba-tag ba-tag-before">Before</span>
+          <span class="ba-tag ba-tag-after">After</span>
+          <span class="ba-divider" aria-hidden="true"><span class="ba-knob"></span></span>
+          <input class="ba-range" type="range" min="0" max="100" value="86" step="0.1"
+                 aria-label="Drag to compare Aqilah&rsquo;s skin before and after">
+          <figcaption class="ba-cap">
+            <blockquote>&ldquo;My skin finally feels calm for the first time in years.&rdquo;</blockquote>
+            <cite>Aqilah</cite>
+          </figcaption>
+        </div>
+      </figure>
+
+      <figure class="ba">
+        <div class="ba-stage" style="--pos:86%">
+          <img class="ba-img ba-after"  src="ba/bryna-after.jpg"  alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <img class="ba-img ba-before" src="ba/bryna-before.jpg" alt="" width="800" height="1000" loading="lazy" decoding="async">
+          <span class="ba-tag ba-tag-before">Before</span>
+          <span class="ba-tag ba-tag-after">After</span>
+          <span class="ba-divider" aria-hidden="true"><span class="ba-knob"></span></span>
+          <input class="ba-range" type="range" min="0" max="100" value="86" step="0.1"
+                 aria-label="Drag to compare Bryna&rsquo;s skin before and after">
+          <figcaption class="ba-cap">
+            <blockquote>&ldquo;Years of layering products and making it worse. All it needed was the right guidance.&rdquo;</blockquote>
+            <cite>Bryna</cite>
+          </figcaption>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE SKIN READ ============ -->
+<section class="band-dark read">
+  <div class="read-media">
+    <img src="skin-read.jpg" width="1920" height="1080" alt="" loading="lazy" decoding="async" onerror="this.remove()">
+  </div>
+  <div class="wrap">
+    <div class="scan-grid">
+      <p class="eyebrow on-dark">Introducing the Skin Read</p>
+      <h2>What a Skin Read actually is.</h2>
+      <p>Forty-five minutes, one-on-one, with a skin barrier specialist. It is not a facial. Nothing is applied to your skin and nothing is extracted.</p>
+      <p>The BeFound Skin Scan reads hydration, texture and tone, and which zones are holding while others quietly fail. By the time your eyes catch any of it, your barrier has been struggling for weeks.</p>
+      <p>Your barrier comes back as a score and a band. &ldquo;My skin is acting up&rdquo; turns into something you can see, point at and fix.</p>
+
+      <div class="readout">
+        <div class="rhead">
+          <span class="t">BeFound Skin Scan</span>
+          <span class="s">Illustrative</span>
+        </div>
+        <svg class="sprite" aria-hidden="true" focusable="false"><defs>
+        <path id="fShape" d="M82.3 10L94.7 15.9L103.2 21.8L109.7 27.7L114.8 33.6L118.8 39.5L121.8 45.5L123.9 51.4L125.3 57.3L125.9 63.2L125.9 69.1L125.3 75L124.2 80.9L122.6 86.8L120.6 92.7L118.2 98.6L115.4 104.5L112.4 110.5L109.1 116.4L105.6 122.3L101.9 128.2L98.1 134.1L94.2 140L65.8 140L61.9 134.1L58.1 128.2L54.4 122.3L50.9 116.4L47.6 110.5L44.6 104.5L41.8 98.6L39.4 92.7L37.4 86.8L35.8 80.9L34.7 75L34.1 69.1L34.1 63.2L34.7 57.3L36.1 51.4L38.2 45.5L41.2 39.5L45.2 33.6L50.3 27.7L56.8 21.8L65.3 15.9L77.7 10Z"/>
+        <clipPath id="fClip"><path d="M82.3 10L94.7 15.9L103.2 21.8L109.7 27.7L114.8 33.6L118.8 39.5L121.8 45.5L123.9 51.4L125.3 57.3L125.9 63.2L125.9 69.1L125.3 75L124.2 80.9L122.6 86.8L120.6 92.7L118.2 98.6L115.4 104.5L112.4 110.5L109.1 116.4L105.6 122.3L101.9 128.2L98.1 134.1L94.2 140L65.8 140L61.9 134.1L58.1 128.2L54.4 122.3L50.9 116.4L47.6 110.5L44.6 104.5L41.8 98.6L39.4 92.7L37.4 86.8L35.8 80.9L34.7 75L34.1 69.1L34.1 63.2L34.7 57.3L36.1 51.4L38.2 45.5L41.2 39.5L45.2 33.6L50.3 27.7L56.8 21.8L65.3 15.9L77.7 10Z"/></clipPath>
+        <g id="dWater"><path d="M53.5 24.4Q80 26.2 106.5 24.4"/><path d="M41.2 38.9Q80 42.1 118.8 38.9"/><path d="M35.1 53.3Q80 57.7 124.9 53.3"/><path d="M33.6 67.8Q80 72.7 126.4 67.8"/><path d="M35.7 82.2Q80 87.1 124.3 82.2"/><path d="M40.6 96.7Q80 101 119.4 96.7"/><path d="M47.6 111.1Q80 114.3 112.4 111.1"/><path d="M56.2 125.6Q80 127.3 103.8 125.6"/></g>
+        <g id="dSpot"><circle cx="58" cy="103.9" r="3.1"/><circle cx="51.4" cy="82.9" r="2.2"/><circle cx="51.4" cy="92.3" r="2"/><circle cx="45.8" cy="88.2" r="2.5"/><circle cx="43.4" cy="55.7" r="1.6"/><circle cx="58.2" cy="100.5" r="3"/><circle cx="102.7" cy="103" r="2"/><circle cx="51.2" cy="100.2" r="2.7"/><circle cx="108.2" cy="65.4" r="2.5"/><circle cx="94.2" cy="87.5" r="1.7"/><circle cx="41.1" cy="71.8" r="3.4"/><circle cx="59.6" cy="101.1" r="2.9"/><circle cx="102" cy="99.8" r="2.1"/><circle cx="52.9" cy="79.7" r="2.8"/><circle cx="94.5" cy="107" r="2.6"/><circle cx="98.4" cy="82.1" r="2.9"/><circle cx="42.9" cy="79.3" r="2.4"/><circle cx="55.6" cy="79.4" r="1.6"/><circle cx="58.6" cy="67.8" r="2.9"/><circle cx="46.5" cy="74.4" r="1.9"/><circle cx="103.9" cy="82.9" r="2.6"/><circle cx="63" cy="101.2" r="2.8"/><circle cx="62.8" cy="98.7" r="2.5"/><circle cx="94.9" cy="99" r="1.9"/><circle cx="65.7" cy="92.8" r="2.3"/><circle cx="99.1" cy="83.1" r="2.6"/><circle cx="61.7" cy="106.5" r="1.8"/><circle cx="64.7" cy="68" r="3"/><circle cx="96.8" cy="61.9" r="3.2"/><circle cx="56.9" cy="98.1" r="2.4"/></g>
+        <g id="dPigment"><ellipse cx="58" cy="64" rx="13" ry="9"/><ellipse cx="102" cy="66" rx="12" ry="8"/><ellipse cx="80" cy="32" rx="15" ry="7"/><ellipse cx="64" cy="96" rx="9" ry="6"/><ellipse cx="98" cy="98" rx="8" ry="6"/></g>
+        <g id="dPimple"><circle cx="90.9" cy="35" r="2.1"/><circle cx="96.1" cy="99.1" r="1.3"/><circle cx="75.7" cy="117.6" r="1.9"/><circle cx="94.8" cy="110.4" r="1.4"/><circle cx="74.5" cy="107.4" r="1.8"/><circle cx="97" cy="119.8" r="1.3"/><circle cx="69.7" cy="31.5" r="2"/><circle cx="71.5" cy="40.7" r="1.6"/><circle cx="72.4" cy="35.5" r="1.7"/><circle cx="79.7" cy="96.1" r="1.9"/><circle cx="85.5" cy="111.3" r="1.9"/><circle cx="66.7" cy="98.7" r="2.2"/><circle cx="93.8" cy="42.2" r="1.7"/><circle cx="99.6" cy="31.2" r="1.9"/><circle cx="86.7" cy="95.1" r="1.5"/><circle cx="108.4" cy="105.1" r="2"/></g>
+        <g id="dMetal"><circle cx="102.5" cy="84.7" r="0.9"/><circle cx="58.9" cy="115.8" r="1.1"/><circle cx="82.3" cy="31.8" r="0.8"/><circle cx="104.4" cy="45.1" r="1.2"/><circle cx="54.3" cy="33" r="0.9"/><circle cx="46.1" cy="80.4" r="1.2"/><circle cx="67.1" cy="63.4" r="0.9"/><circle cx="75.4" cy="80.6" r="0.9"/><circle cx="92.6" cy="89.5" r="0.9"/><circle cx="85.4" cy="103" r="1.3"/><circle cx="107.3" cy="103.8" r="0.8"/><circle cx="45.3" cy="50.5" r="0.9"/><circle cx="102.1" cy="79.6" r="1.3"/><circle cx="114.1" cy="71.1" r="0.9"/><circle cx="58.4" cy="45.2" r="0.8"/><circle cx="97.6" cy="121.4" r="1.1"/><circle cx="83.1" cy="68.1" r="1.2"/><circle cx="62.9" cy="100.4" r="0.8"/><circle cx="96.2" cy="45.4" r="1.2"/><circle cx="99.2" cy="82.3" r="0.9"/><circle cx="106.3" cy="31.5" r="1"/><circle cx="88.3" cy="108.9" r="1.2"/><circle cx="56.7" cy="96.5" r="0.8"/><circle cx="56.9" cy="106.1" r="1"/><circle cx="91.9" cy="86.4" r="0.8"/><circle cx="50.7" cy="79" r="1.3"/><circle cx="62.4" cy="26.4" r="0.8"/><circle cx="60.7" cy="100.5" r="1.1"/><circle cx="102.1" cy="72.5" r="1"/><circle cx="65.3" cy="117.7" r="1"/><circle cx="55.3" cy="57.9" r="1.1"/><circle cx="86.9" cy="119.1" r="1.2"/><circle cx="90.5" cy="38.6" r="0.8"/><circle cx="103.6" cy="98.5" r="0.8"/><circle cx="81.4" cy="109.7" r="0.9"/><circle cx="90.2" cy="79" r="1.3"/><circle cx="73.3" cy="32.7" r="1.1"/><circle cx="95.2" cy="75.3" r="1.1"/><circle cx="110.8" cy="60.4" r="1.3"/><circle cx="55.2" cy="61.8" r="1.1"/><circle cx="59.1" cy="56.9" r="1"/><circle cx="101.6" cy="24.4" r="1.1"/><circle cx="108.1" cy="79.5" r="0.8"/><circle cx="58.2" cy="69.2" r="1"/><circle cx="112.3" cy="78.7" r="0.9"/><circle cx="101.1" cy="105.8" r="0.8"/><circle cx="82.8" cy="119" r="1.1"/><circle cx="102.9" cy="84.2" r="1"/><circle cx="82.5" cy="80.3" r="1.1"/><circle cx="85.5" cy="116.6" r="1.2"/><circle cx="110.6" cy="34.9" r="0.8"/><circle cx="86.9" cy="119.5" r="1.1"/><circle cx="92.1" cy="39.2" r="1.2"/><circle cx="93.8" cy="31.6" r="0.8"/><circle cx="100.7" cy="38.8" r="0.9"/><circle cx="74.8" cy="99.5" r="0.8"/><circle cx="100.9" cy="115.7" r="0.7"/><circle cx="90.9" cy="89.7" r="0.8"/><circle cx="93.5" cy="25.1" r="0.7"/><circle cx="59.2" cy="117.9" r="1.3"/><circle cx="56.2" cy="77.7" r="1"/><circle cx="108.5" cy="35.9" r="0.8"/><circle cx="71.1" cy="112" r="0.7"/><circle cx="65" cy="105.9" r="1"/></g>
+        <g id="dPorph"><circle cx="78.3" cy="87.9" r="1.2"/><circle cx="60.7" cy="44.7" r="1.1"/><circle cx="80.3" cy="72.2" r="1"/><circle cx="107.1" cy="54.2" r="1.7"/><circle cx="75.5" cy="31.8" r="0.9"/><circle cx="55.1" cy="36.1" r="1.2"/><circle cx="103.1" cy="34" r="1.6"/><circle cx="101.3" cy="51.7" r="1.6"/><circle cx="89.1" cy="31.8" r="1.5"/><circle cx="72.8" cy="28.2" r="1"/><circle cx="69.1" cy="44.3" r="1.5"/><circle cx="73.9" cy="38" r="1.6"/><circle cx="101.2" cy="39.9" r="1"/><circle cx="105.9" cy="38.5" r="1.6"/><circle cx="93.7" cy="30.9" r="1.5"/><circle cx="59.7" cy="31.6" r="1.2"/><circle cx="71.7" cy="40.4" r="1.4"/><circle cx="88.9" cy="28.2" r="1.6"/><circle cx="96.1" cy="37.5" r="1.3"/><circle cx="98" cy="43.8" r="1.3"/><circle cx="62.3" cy="39.7" r="1.2"/><circle cx="72" cy="64" r="1.2"/><circle cx="74.5" cy="87.1" r="1.6"/><circle cx="65.8" cy="36.1" r="1.5"/><circle cx="81.9" cy="95.7" r="1.2"/><circle cx="74.4" cy="56.8" r="1.4"/></g>
+        <g id="dFibre"><path d="M53.5 24.4Q80 26.2 106.5 24.4"/><path d="M41.2 38.9Q80 42.1 118.8 38.9"/><path d="M35.1 53.3Q80 57.7 124.9 53.3"/><path d="M33.6 67.8Q80 72.7 126.4 67.8"/><path d="M35.7 82.2Q80 87.1 124.3 82.2"/><path d="M40.6 96.7Q80 101 119.4 96.7"/><path d="M47.6 111.1Q80 114.3 112.4 111.1"/><path d="M56.2 125.6Q80 127.3 103.8 125.6"/><path d="M78.4 10L69 16.5L62.8 23L58.1 29.5L54.5 36L51.7 42.5L49.8 49L48.5 55.5L47.9 62L47.8 68.5L48.3 75L49.1 81.5L50.4 88L52.1 94.5L54 101L56.2 107.5L58.7 114L61.3 120.5L64.1 127L67.1 133.5L70 140"/><path d="M79.2 10L74.4 16.5L71.1 23L68.7 29.5L66.9 36L65.5 42.5L64.5 49L63.8 55.5L63.5 62L63.5 68.5L63.7 75L64.1 81.5L64.8 88L65.6 94.5L66.6 101L67.8 107.5L69 114L70.4 120.5L71.8 127L73.3 133.5L74.9 140"/><path d="M80.8 10L85.6 16.5L88.9 23L91.3 29.5L93.1 36L94.5 42.5L95.5 49L96.2 55.5L96.5 62L96.5 68.5L96.3 75L95.9 81.5L95.2 88L94.4 94.5L93.4 101L92.2 107.5L91 114L89.6 120.5L88.2 127L86.7 133.5L85.1 140"/><path d="M81.6 10L91 16.5L97.2 23L101.9 29.5L105.5 36L108.3 42.5L110.2 49L111.5 55.5L112.1 62L112.2 68.5L111.7 75L110.9 81.5L109.6 88L107.9 94.5L106 101L103.8 107.5L101.3 114L98.7 120.5L95.9 127L92.9 133.5L90 140"/></g>
+        <radialGradient id="gWater" cx="50%" cy="36%" r="62%"><stop offset="0" stop-color="#CB6D51" stop-opacity=".44"/><stop offset="1" stop-color="#CB6D51" stop-opacity=".04"/></radialGradient>
+        <radialGradient id="gSensL" cx="24%" cy="56%" r="30%"><stop offset="0" stop-color="#CB6D51" stop-opacity=".66"/><stop offset="1" stop-color="#CB6D51" stop-opacity="0"/></radialGradient>
+        <radialGradient id="gSensR" cx="76%" cy="56%" r="30%"><stop offset="0" stop-color="#CB6D51" stop-opacity=".66"/><stop offset="1" stop-color="#CB6D51" stop-opacity="0"/></radialGradient>
+        <linearGradient id="gSweep" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8AE1E" stop-opacity="0"/><stop offset=".5" stop-color="#E8AE1E" stop-opacity=".55"/><stop offset="1" stop-color="#E8AE1E" stop-opacity="0"/></linearGradient>
+        </defs></svg>
+        <ul class="modes">
+          <li class="mode m-water">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use href="#fShape" fill="url(#gWater)"/><g class="mesh"><use href="#dWater"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">UV water</span>
+          </li>
+          <li class="mode m-spot">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk dark" href="#fShape"/><g class="dots pale"><use href="#dSpot"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">UV spot</span>
+          </li>
+          <li class="mode m-pigment">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk" href="#fShape"/><g class="blot"><use href="#dPigment"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">Pigment</span>
+          </li>
+          <li class="mode m-sens">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk" href="#fShape"/><rect width="160" height="150" fill="url(#gSensL)"/><rect width="160" height="150" fill="url(#gSensR)"/><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">Sensitivity</span>
+          </li>
+          <li class="mode m-pimple">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk" href="#fShape"/><g class="dots clay"><use href="#dPimple"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">Pimple</span>
+          </li>
+          <li class="mode m-metal">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk dark" href="#fShape"/><g class="dots gold fine"><use href="#dMetal"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">Heavy metal</span>
+          </li>
+          <li class="mode m-porph">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk dark" href="#fShape"/><g class="dots gold"><use href="#dPorph"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">Porphyrin</span>
+          </li>
+          <li class="mode m-fibre">
+            <svg class="fx" viewBox="0 0 160 150" aria-hidden="true"><g clip-path="url(#fClip)"><use class="sk" href="#fShape"/><g class="mesh"><use href="#dFibre"/></g><rect class="sweep" y="-34" width="160" height="34" fill="url(#gSweep)"/></g><use class="edge" href="#fShape"/></svg>
+            <span class="m-n">Collagenous fibre</span>
+          </li>
+        </ul>
+        <p class="fine">Eight captures, one face. Yours is read in the studio, not estimated here.</p>
+      </div>
+    </div>
+    <p style="margin-top:2.5rem"><a class="btn on-dark" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a></p>
+    <p class="cta-note">Free &middot; 45 minutes &middot; Nothing applied to your skin</p>
+  </div>
+</section>
+
+<!-- ============ BOOKING ============ -->
+<!-- ACUITY: the short link befoundstudios.as.me/discoverbefound2 302s to the
+     resolved scheduler, so the resolved URL is embedded directly. One redirect
+     inside an iframe is a visible extra beat before the calendar paints, and
+     the short link can be repointed later without anyone noticing the embed
+     broke. If the appointment type changes, re-resolve the short link and
+     paste the new target here. -->
+<section class="band-blush" id="book">
+  <div class="wrap">
+    <div class="narrow">
+      <p class="eyebrow">Book your Skin Read</p>
+      <h2>Ready to finally understand your skin and start seeing visible improvements?</h2>
+      <p class="lede">Pick a time that suits you. Free, 45 minutes, one-on-one at the studio. You leave with clarity on your skin and what&rsquo;s next for you.</p>
+    </div>
+
+    <div class="booking">
+      <iframe class="booking-frame"
+              title="Book a Skin Read with BeFound Studios"
+              src="https://befoundstudios.as.me/schedule/93684abe/?appointmentTypeIds%5B%5D=79092713"
+              width="100%" height="820" frameborder="0"
+              loading="lazy"></iframe>
+    </div>
+
+    <p class="booking-where">
+      <strong>137 Amoy St, #02-01 Far East Square, Singapore 049965.</strong>
+      Nearest MRT is Telok Ayer. Nothing is applied to your skin, so you can come on a work day and go straight back.
+    </p>
+  </div>
+</section>
+
+<!-- ============ DAPHNE ============ -->
+<!-- daphne.mp4 is the client-supplied cut, remuxed rather than re-encoded:
+     the source was already efficiently compressed, so a re-encode cost quality
+     without buying meaningful size. The remux exists to move the moov atom to
+     the front so playback starts before the file has finished buffering.
+     preload="metadata" keeps the 13.5MB off the initial page load. -->
+<section class="band-dark">
+  <div class="wrap daphne">
+    <div>
+      <p class="eyebrow on-dark">Watch one with Daphne</p>
+      <h2>This is what a Skin Read looks like.</h2>
+      <p class="lede" style="color:rgba(250,239,222,.82)">Daphne filmed hers, from right before her first visit to everything she learned about her skin. Subtitles are on, sound is optional.</p>
+      <p class="daphne-pull">She walked in guessing. She walked out with a map.</p>
+    </div>
+    <figure class="daphne-media">
+      <video class="daphne-video" controls playsinline preload="metadata"
+             poster="daphne-poster.jpg"
+             aria-label="Daphne describes her Skin Read">
+        <source src="daphne.mp4" type="video/mp4">
+      </video>
+      <figcaption class="daphne-badge">Real client footage</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ MINUTE BY MINUTE ============ -->
+<section class="band-blush">
+  <div class="wrap">
+    <div class="narrow">
+      <p class="eyebrow">Minute by minute</p>
+      <h2>Here is exactly how the 45 minutes go.</h2>
+    </div>
+
+    <figure class="studio">
+      <img src="scan-studio.jpg" width="1800" height="690" loading="lazy" decoding="async"
+           alt="The BeFound Skin Scan: a client resting her face in the imaging dome, a specialist reviewing the captures on a tablet, and the lit interior of the dome.">
+      <figcaption>The dome photographs your face under every light mode. What comes back is the contact sheet on the right.</figcaption>
+    </figure>
+
+    <ol class="mins">
+      <li>
+        <p class="mins-when">Minutes 0 to 10 &middot; The scan</p>
+        <h3>Your barrier, read at machine level</h3>
+        <p>The BeFound Skin Scan reads your skin at a level your eyes and a mirror cannot. Hydration, texture, tone, where your barrier is strong and where it is struggling.</p>
+      </li>
+      <li>
+        <p class="mins-when">Minutes 10 to 30 &middot; Your Findings</p>
+        <h3>Walked through together</h3>
+        <p>We go through what the scan found, alongside your skin history. What you have tried, what helped, and what has been quietly working against you.</p>
+      </li>
+      <li>
+        <p class="mins-when">Minutes 30 to 45 &middot; What is possible</p>
+        <h3>Your path, mapped</h3>
+        <p>We map out where your skin could go from here and the path to get it there. Clear, honest, specific to your skin.</p>
+      </li>
+    </ol>
+    <p class="mins-close">You leave knowing more about your skin than you ever have.</p>
+  </div>
+</section>
+
+<!-- ============ CLIENT STORIES ============ -->
+<!-- Client-supplied cuts, remuxed rather than re-encoded: all three arrived
+     at 583-917 kb/s, so a re-encode would have cost quality without buying
+     size. The remux moves the moov atom to the front, and drops a stray
+     timecode track two of them carried. preload="metadata" keeps all 22MB off
+     the initial page load; only headers fetch until someone presses play. -->
+<section class="band-dark stories">
+  <div class="wrap">
+    <div class="narrow">
+      <p class="eyebrow on-dark">Client stories</p>
+      <h2>From the women who have sat in the chair.</h2>
+      <p class="lede" style="color:rgba(250,239,222,.82)">Unscripted conversations about where their skin started and where it is now. Press play, sound on.</p>
+    </div>
+    <ul class="stories-grid">
+        <li class="story">
+          <video class="story-video" controls playsinline preload="metadata"
+                 poster="stories/chermaine-poster.jpg"
+                 aria-label="Chermaine on her skin before and after BeFound">
+            <source src="stories/chermaine.mp4" type="video/mp4">
+          </video>
+          <div class="story-meta">
+            <h3>Chermaine</h3>
+            <p class="story-tag">Acne &middot; Products made it worse</p>
+            <p class="story-out"><span class="story-dot" aria-hidden="true"></span>Foundation-free skin</p>
+          </div>
+        </li>
+        <li class="story">
+          <video class="story-video" controls playsinline preload="metadata"
+                 poster="stories/karynne-poster.jpg"
+                 aria-label="Karynne on her skin before and after BeFound">
+            <source src="stories/karynne.mp4" type="video/mp4">
+          </video>
+          <div class="story-meta">
+            <h3>Karynne</h3>
+            <p class="story-tag">Stuck in facial dependency &middot; Oil control</p>
+            <p class="story-out"><span class="story-dot" aria-hidden="true"></span>Personalised clarity on what works</p>
+          </div>
+        </li>
+        <li class="story">
+          <video class="story-video" controls playsinline preload="metadata"
+                 poster="stories/aqilah-poster.jpg"
+                 aria-label="Aqilah on her skin before and after BeFound">
+            <source src="stories/aqilah.mp4" type="video/mp4">
+          </video>
+          <div class="story-meta">
+            <h3>Aqilah</h3>
+            <p class="story-tag">Could not go out bare-faced &middot; Self-conscious</p>
+            <p class="story-out"><span class="story-dot" aria-hidden="true"></span>People compliment her skin now</p>
+          </div>
+        </li>
+    </ul>
+
+    <div class="cta-rail">
+      <a class="btn on-dark" href="#book">Book my Skin Read <span class="arw">&rarr;</span></a>
+      <p class="cta-note" style="color:rgba(250,239,222,.66)">Free &middot; 45 minutes &middot; One-on-one at the studio</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REVIEWS ============ -->
+<section class="band-blush">
+  <div class="wrap">
+    <svg class="sprite" aria-hidden="true" focusable="false"><defs>
+      <g id="gMark"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/><path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3a7.2 7.2 0 0 1-10.7-3.8H1.3v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.3 14.3a7.1 7.1 0 0 1 0-4.6V6.6H1.3a12 12 0 0 0 0 10.8l4-3.1z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.4.6 4.6 1.8l3.5-3.5A12 12 0 0 0 1.3 6.6l4 3.1A7.2 7.2 0 0 1 12 4.8z"/></g>
+      <path id="star" d="M10 1l2.6 5.5 6 .8-4.4 4.2 1.1 6L10 15.6 4.7 17.5l1.1-6L1.4 7.3l6-.8L10 1z"/>
+    </defs></svg>
+    <div class="narrow" style="text-align:center;margin-inline:auto">
+      <p class="eyebrow">What our clients say</p>
+      <h2>Straight from the people who have been there.</h2>
+    </div>
+
+    <div class="score">
+      <div class="score-l">
+        <p class="score-n">4.9</p>
+        <span class="rv-stars score-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span>
+        <p class="score-c">1,500+ reviews</p>
+      </div>
+      <div class="score-r">
+        <p class="score-src"><svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>Google Reviews</p>
+        <p class="score-claim">Singapore&rsquo;s most-reviewed skin journey studio</p>
+      </div>
+    </div>
+
+    <ul class="reviews" tabindex="0" role="region" aria-label="Google reviews, scroll for more">
+        <li class="rv rv-a">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">Y</span>
+            <div class="rv-id">
+              <p class="rv-name">Yvonne Tan</p>
+              <p class="rv-sub">Local Guide &middot; 8 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">3 years ago</span></p>
+          <p>The results are lasting. It&rsquo;s been 3 years and I have been diligently keeping to the routine customised for me through my 1-year journey with BeFound. I spend so much less on my skin now, no guesswork with products and I don&rsquo;t see a need for facials. I still don&rsquo;t get pimples much, if at all.</p>
+        </li>
+        <li class="rv rv-b">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">M</span>
+            <div class="rv-id">
+              <p class="rv-name">May Ng</p>
+              <p class="rv-sub">6 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">2 years ago</span></p>
+          <p>I&rsquo;ve been with BeFound Studios for almost two years and the journey has been truly transformative. I first went because of my very dry and sensitive skin. Almost every product I tried would eventually cause irritation. The team was patient, systematic, and incredibly knowledgeable. Today, my routine is simple, effective, and finally works for my skin. A special thank-you to Pris and Mag, your care and patience made all the difference.</p>
+        </li>
+        <li class="rv rv-c">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">C</span>
+            <div class="rv-id">
+              <p class="rv-name">Callie Chia</p>
+              <p class="rv-sub">Local Guide &middot; 11 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">4 months ago</span></p>
+          <p>Every week they followed up and checked in on how my skin was doing, making changes as needed. I felt really supported in my journey. My skin is looking much better, brighter, with minimal breakouts. I&rsquo;m leaving with newfound knowledge about my skin. Thank you BeFound team!</p>
+        </li>
+        <li class="rv rv-d">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">A</span>
+            <div class="rv-id">
+              <p class="rv-name">Amanda Tan</p>
+              <p class="rv-sub">5 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">1 year ago</span></p>
+          <p>I started my BeFound journey in 2024, oily and dull skin with scars and pigmentation. My complexion has become oil-controlled, brighter and less pimple-prone. I love my skin now! This is my 2nd year with BeFound.</p>
+        </li>
+        <li class="rv rv-e">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">R</span>
+            <div class="rv-id">
+              <p class="rv-name">Razz Li</p>
+              <p class="rv-sub">Local Guide &middot; 22 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">1 year ago</span></p>
+          <p>It has truly been a meaningful and fulfilling experience. The team&rsquo;s sincerity and kind understanding gave me the faith to take part in the Skindewcation journey. They went the extra mile, ensuring my routine was correct, sharing practical tips, and guiding me with so much care. I&rsquo;ve gained not only knowledge but renewed self-confidence.</p>
+        </li>
+        <li class="rv rv-a">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">J</span>
+            <div class="rv-id">
+              <p class="rv-name">Janice Huang</p>
+              <p class="rv-sub">4 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">2 years ago</span></p>
+          <p>My face has become much clearer and in a very healthy-looking condition. I had been purchasing products that didn&rsquo;t suit my skin without knowing it. Cosy, homely environment, always a comfortable follow-up session with a cup of tea while understanding my skin. Cheers to the whole professional BeFound team.</p>
+        </li>
+        <li class="rv rv-b">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">J</span>
+            <div class="rv-id">
+              <p class="rv-name">Jermaine Tan</p>
+              <p class="rv-sub">Local Guide &middot; 14 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">8 months ago</span></p>
+          <p>What I&rsquo;ve learned from the skin journey program:</p>
+          <ul class="rv-list"><li>Healthy skin barrier is everything, be gentle, let skin heal naturally</li><li>Smart product use: check ingredients, patch test first</li><li>Simple, tailored routines work, no need to layer everything</li></ul>
+          <p>What worked for me: balancing my skin&rsquo;s oil levels, no more blotters or facials.</p>
+        </li>
+        <li class="rv rv-c">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">D</span>
+            <div class="rv-id">
+              <p class="rv-name">Debra J.</p>
+              <p class="rv-sub">3 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">6 months ago</span></p>
+          <p>Did a one-year program with BeFound. Oily and very sensitive skin, it took systematic trial and error to find what worked. A month on from the program, my skin continues to steadily improve: getting thicker, hardly any pimples, and no longer reliant on dermatologist creams.</p>
+        </li>
+        <li class="rv rv-e">
+          <div class="rv-head">
+            <span class="rv-av" aria-hidden="true">S</span>
+            <div class="rv-id">
+              <p class="rv-name">Sophia Chua</p>
+              <p class="rv-sub">7 reviews</p>
+            </div>
+            <svg class="rv-g" viewBox="0 0 24 24" aria-hidden="true"><use href="#gMark"/></svg>
+          </div>
+          <p class="rv-rate"><span class="rv-stars" aria-label="5 out of 5"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><use href="#star"/></svg></span><span class="rv-when">5 months ago</span></p>
+          <p>My skin is more troubled than the average person&rsquo;s. Mid-journey I found out I couldn&rsquo;t use common ingredients like centella and hyaluronic acid. What I appreciate most is their upfront yet empathetic communication, and their help removing the mental load from researching, testing and monitoring every single product.</p>
+        </li>
+    </ul>
+
+    <div class="cta-rail">
+      <a class="btn" href="#book">Book my Skin Read <span class="arw">&rarr;</span></a>
+      <p class="cta-note">Free &middot; 45 minutes &middot; One-on-one at the studio</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADVANTAGES ============ -->
+<section class="band-dark">
+  <div class="wrap">
+    <svg class="sprite" aria-hidden="true" focusable="false"><defs>
+      <g id="ic-bare"><circle cx="12" cy="10.5" r="3.4"/><path d="M12 3.2v1.8M4.8 10.5H3M21 10.5h-1.8M6.9 5.4 5.6 4.1M17.1 5.4l1.3-1.3"/><path d="M2.5 18.5h19"/></g>
+      <g id="ic-marks"><path d="M2.5 20h19"/><circle cx="6.5" cy="6" r="2.6"/><circle cx="12" cy="10" r="1.8"/><circle cx="17.5" cy="14" r="1"/></g>
+      <g id="ic-buy"><path d="M10 3.2h4v2.4c0 .7.2 1.1.6 1.6l1.1 1.3c.5.6.8 1.3.8 2.1v8.2a1.9 1.9 0 0 1-1.9 1.9H9.4a1.9 1.9 0 0 1-1.9-1.9v-8.2c0-.8.3-1.5.8-2.1l1.1-1.3c.4-.5.6-.9.6-1.6V3.2Z"/><path d="M3.4 20.6 20.6 3.4"/></g>
+      <g id="ic-face"><path d="M12 3c3.7 0 6.1 2.9 6.1 6.7 0 4.3-2.5 8.8-4.7 10.4a2.4 2.4 0 0 1-2.8 0C8.4 18.5 5.9 14 5.9 9.7 5.9 5.9 8.3 3 12 3Z"/><path d="M9.4 10.6h.01M14.6 10.6h.01"/></g>
+      <g id="ic-label"><path d="M13.3 2.8h6a1.9 1.9 0 0 1 1.9 1.9v6a2 2 0 0 1-.6 1.4l-8.4 8.4a2 2 0 0 1-2.8 0l-6-6a2 2 0 0 1 0-2.8l8.4-8.4a2 2 0 0 1 1.5-.5Z"/><circle cx="16.6" cy="7.4" r="1.3"/><path d="m7.4 12.4 2.3 2.3 4.4-4.4"/></g>
+      <g id="ic-year"><circle cx="12" cy="12" r="9"/><path d="M12 5.6L12 3"/><path d="M15.7 5.59L16.5 4.21"/><path d="M18.41 8.3L19.79 7.5"/><path d="M18.4 12L21 12"/><path d="M18.41 15.7L19.79 16.5"/><path d="M15.7 18.41L16.5 19.79"/><path d="M12 18.4L12 21"/><path d="M8.3 18.41L7.5 19.79"/><path d="M5.59 15.7L4.21 16.5"/><path d="M5.6 12L3 12"/><path d="M5.59 8.3L4.21 7.5"/><path d="M8.3 5.59L7.5 4.21"/><circle cx="12" cy="3" r="1.5" fill="currentColor" stroke="none"/></g>
+    </defs></svg>
+    <h2 style="max-width:20ch">What changes when the barrier is the thing you fix.</h2>
+    <ul class="adv">
+      <li>
+        <span class="adv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-bare"/></svg></span>
+        <h3>Bare skin you&rsquo;re fine to leave bare</h3>
+        <p>Not a filter and not good lighting. Skin that looks like that at 7am.</p>
+      </li>
+      <li>
+        <span class="adv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-marks"/></svg></span>
+        <h3>Marks clear on schedule</h3>
+        <p>A barrier with something left in it repairs faster. Breakouts stop lingering the way they used to.</p>
+      </li>
+      <li>
+        <span class="adv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-buy"/></svg></span>
+        <h3>You stop buying what your skin can&rsquo;t take</h3>
+        <p>The drawer stops filling up. You know what your barrier can hold before you pay for it.</p>
+      </li>
+      <li>
+        <span class="adv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-face"/></svg></span>
+        <h3>Foundation becomes a choice</h3>
+        <p>Chermaine came to us covering cystic acne. She is foundation-free now.</p>
+      </li>
+      <li>
+        <span class="adv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-label"/></svg></span>
+        <h3>You can read a label and know</h3>
+        <p>Not guess. Know which actives your barrier can currently hold, and which one is three months away.</p>
+      </li>
+      <li>
+        <span class="adv-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-year"/></svg></span>
+        <h3>Someone who knows your barrier, all year</h3>
+        <p>Aircon, haze, hormones, a bad month at work. You get guidance through those months instead of starting the guessing over.</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ FOUNDER / POSITIONING ============ -->
+<section class="band-blush">
+  <div class="wrap founder">
+    <img src="founder-priscilla.jpg" width="900" height="1350" loading="lazy" decoding="async" alt="Priscilla, founder of BeFound Studios">
+    <div>
+      <p class="eyebrow">Priscilla &middot; Founder</p>
+      <p class="claim">BeFound is the only skin barrier specialist in Singapore that helps women <span class="hit">eliminate the guesswork.</span></p>
+      <p>Most routes never get you to clarity. You guess your skin type, you guess the product, then you guess whether six weeks of it did anything. We measure instead, and build on the measurement.</p>
+      <p>It works because of one belief, and it is an unpopular one in this industry. Nothing you put on your face matters until the barrier underneath it can hold.</p>
+      <p><strong>And we would rather tell you your barrier needs a simpler routine and six months to see visible improvements than sell you something it cannot hold.</strong></p>
+      <div class="fstats">
+        <div><div class="n">10+</div><div class="l">Years reading skin<br>Singapore &amp; Japan</div></div>
+        <div><div class="n">2,000+</div><div class="l">Barriers read<br>at BeFound</div></div>
+        <div><div class="n">1-on-1</div><div class="l">Every single<br>session</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NO-PRESSURE + CLOSE ============ -->
+<section class="band-dark">
+  <div class="wrap">
+    <div class="close-box">
+      <p class="eyebrow on-dark">The no-pressure promise</p>
+      <h2>Whatever we find, you&rsquo;ll hear it straight.</h2>
+    </div>
+
+    <ol class="promises">
+      <li><p><strong>Nothing is prescribed in the room.</strong> No product list, no pressure at the counter. Your Findings go home with you, and the decision happens there.</p></li>
+      <li><p><strong>If a program fits your skin, we&rsquo;ll say so once, plainly.</strong> What it is, what it does, how long it takes. Then it&rsquo;s your call.</p></li>
+      <li><p><strong>If it doesn&rsquo;t fit, we&rsquo;ll tell you that too.</strong> Some barriers just need a simpler routine and time. If that&rsquo;s you, your Findings will say exactly that.</p></li>
+    </ol>
+
+    <div class="close-box" style="margin-top:clamp(2.4rem,4vw,3.2rem)">
+      <a class="btn on-dark" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a>
+      <div class="close-facts">
+        <span>Free</span><span>45 minutes</span><span>One-on-one</span><span>Findings either way</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section>
+  <div class="wrap">
+    <h2 style="text-align:center;max-width:20ch;margin-inline:auto">Questions, answered straight.</h2>
+    <div class="faq" style="margin-top:2.5rem">
+      <details open>
+        <summary>Is this a facial?</summary>
+        <div class="ans">No. Nothing is applied to your skin and nothing is extracted. It is a measurement and a conversation. Your barrier scanned, then explained, then mapped to a path.</div>
+      </details>
+      <details>
+        <summary>Do I need to pay for this?</summary>
+        <div class="ans">No. The Skin Read is free, it takes 45 minutes, and there is no obligation attached to it. You keep your Findings either way.</div>
+      </details>
+      <details>
+        <summary>My skin is sensitive and reactive. Is it safe for me?</summary>
+        <div class="ans">Reactive skin is the skin we read most. Nothing touches your face during the Read except the scan, and the whole point of it is finding out why your skin reacts the way it does.</div>
+      </details>
+      <details>
+        <summary>Will you review my products?</summary>
+        <div class="ans">Not in the Read itself. Photograph them, or bring a list, and we factor them into your Findings. The full product-by-product audit happens in your first consultation if you decide to join us.</div>
+      </details>
+      <details>
+        <summary>Will there be hard-selling?</summary>
+        <div class="ans">No. Nothing is prescribed in the room. If a program fits your barrier we tell you once, plainly, and you decide in your own time. If it does not fit, our consultant will say that instead. We would rather you left with accurate Findings than a package your skin cannot hold.</div>
+      </details>
+      <details>
+        <summary>Should I take the barrier quiz first?</summary>
+        <div class="ans">You do not have to. The scan reads everything we need on the day. If you want a rough idea of where your barrier stands before you come in, the quiz takes 90 seconds and gives us useful context to start from.</div>
+      </details>
+      <details>
+        <summary>I have already tried everything. How is this different?</summary>
+        <div class="ans">Everything you have tried was chosen by guessing. By eye, by review, by whoever was behind the counter. This replaces the guess with a measurement. Once you know where your barrier actually stands, what to do next stops being a gamble.</div>
+      </details>
+      <details>
+        <summary>How fast does a barrier rebuild?</summary>
+        <div class="ans">It depends where yours starts, which is exactly what the scan is for. A barrier that has been stripped for years takes longer than one that has been stripped for months. Your Findings will give you a realistic timeline rather than a marketing one, and you get that timeline whether you join us or not.</div>
+      </details>
+    </div>
+    <p style="text-align:center;margin-top:2.5rem"><a class="btn" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a></p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="foot-id">
+      <span class="foot-mark" role="img" aria-label="BeFound Studios"></span>
+      <p>BeFound Studios &middot; Singapore. The Skin Barrier Specialists.</p>
+    </div>
+    <nav class="foot-connect" aria-label="Contact BeFound Studios">
+      <p class="eyebrow on-dark">Connect</p>
+      <ul>
+        <li><a href="https://www.instagram.com/befoundstudios/" target="_blank" rel="noopener">@befoundstudios</a></li>
+        <li><a href="https://wa.me/6591055075" target="_blank" rel="noopener">WhatsApp us</a></li>
+        <li><a href="mailto:hello@befoundstudios.com">hello@befoundstudios.com</a></li>
+        <li><a href="#book">Book a session</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap">
+    <p class="fine">137 Amoy St, #02-01 Far East Square, Singapore 049965 &middot; &copy;2026 BF International Pte Ltd. All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Progressive enhancement hook. Everything below opts a component into an
+  // animated start; without it the CSS defaults already show the final state,
+  // so a script failure never hides content.
+  document.documentElement.classList.add('js');
+
+  // Before / after sliders. The range input does the real work, so keyboard and
+  // assistive tech are handled natively; this only mirrors its value onto the
+  // clip and makes a press anywhere on the image jump the handle there.
+  [].forEach.call(document.querySelectorAll('.ba-stage'), function(stage, idx){
+    var input = stage.querySelector('.ba-range');
+    if(!input) return;
+
+    var sync = function(){ stage.style.setProperty('--pos', input.value + '%'); };
+    input.addEventListener('input', sync);
+    sync();
+
+    // Pointer position -> value, so the handle lands under the finger straight
+    // away instead of waiting for a drag from wherever it happened to be.
+    var seek = function(clientX){
+      var r = stage.getBoundingClientRect();
+      var pct = ((clientX - r.left) / r.width) * 100;
+      input.value = Math.max(0, Math.min(100, pct));
+      sync();
+    };
+    var touched = false;
+    var markTouched = function(){ touched = true; };
+
+    stage.addEventListener('pointerdown', function(e){
+      markTouched();
+      seek(e.clientX);
+      stage.setPointerCapture(e.pointerId);   // keep tracking outside the box
+    });
+    stage.addEventListener('pointermove', function(e){
+      if(e.buttons === 1) seek(e.clientX);
+    });
+    input.addEventListener('keydown', markTouched);
+
+    // A one-off nudge as the card comes into view, so the handle demonstrates
+    // itself instead of relying on the reader guessing. It runs once, and any
+    // interaction cancels it: a hint that keeps repeating stops being a hint.
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches
+       && 'IntersectionObserver' in window){
+      var REST = 86, PEEK = 66;
+      var nudge = function(delay){
+        var t0 = null, DUR = 1500;
+        var ease = function(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2; };
+        var step = function(ts){
+          if(touched) return;                        // hand it back the moment they engage
+          if(t0 === null) t0 = ts;
+          var p = Math.min(1, (ts - t0) / DUR);
+          // out and back: 0 -> 1 -> 0 across the run
+          var swing = p < .45 ? ease(p/.45)
+                    : p < .6  ? 1
+                    : ease(1 - (p-.6)/.4);
+          input.value = REST - (REST - PEEK) * swing;
+          sync();
+          if(p < 1) requestAnimationFrame(step);
+        };
+        setTimeout(function(){ if(!touched) requestAnimationFrame(step); }, delay);
+      };
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(!en.isIntersecting) return;
+          io.unobserve(en.target);
+          // Staggered so the grid reads as a wave rather than four cards
+          // twitching in unison.
+          nudge(idx * 160);
+        });
+      }, {threshold: 0.45});
+      io.observe(stage);
+    }
+  });
+
+})();
+</script>
+<script src="https://embed.acuityscheduling.com/js/embed.js" async></script>
+</body>
+</html>
