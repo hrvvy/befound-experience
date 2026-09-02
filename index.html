@@ -128,7 +128,8 @@ section{padding-block:var(--gap)}
    a cream sleeve has an edge of 1.35:1 against its own ground. Inverted, it
    reads on every surface here — 8.21:1 on the sleeve, 9.50 on linen, 14.44 on
    hair. */
-.asks{position:absolute;inset:0;z-index:1;pointer-events:none}
+/* Above the scrim, which now claims 1. */
+.asks{position:absolute;inset:0;z-index:2;pointer-events:none}
 .ask{
   position:absolute;left:var(--x);top:var(--y);
   transform:translate(-50%,-50%);
@@ -273,30 +274,41 @@ section{padding-block:var(--gap)}
 .hero-media{position:absolute;inset:0;z-index:-2;overflow:hidden;background:var(--hero-sand)}
 .hero-media img{
   width:100%;height:100%;object-fit:cover;
-  /* The frame is 2.008 against a 1.799 box, so 166px comes off the width. All
-     of it should come off the left, which is empty linen, rather than be split
-     evenly and clip the masked woman at the right edge. */
+  /* At 43:24 the frame is 1.792 against a box that runs about 1.82, so the
+     surplus is now a dozen pixels of height rather than the 166px of width the
+     earlier crop had to shed. The 64% is inert at this ratio and kept only so
+     a wider frame would again bias the trim to the empty linen on the left. */
   object-position:64% center;
   display:block
 }
 /* Two washes rather than one. The copy now sits bottom-left, so the vertical
    wash carries most of the legibility and the horizontal one can be gentler,
    which keeps more of the group unveiled than the old centred layout did. */
+/* z-index 1, not -1. The image is a static in-flow child of .hero-media, and
+   .hero-media is itself a stacking context, so anything negative inside it
+   paints beneath that image rather than over it. The scrim sat there unseen
+   for as long as it has existed: elementsFromPoint at the eyebrow returned
+   [… IMG, hero-scrim], and every contrast figure measured against this
+   gradient was describing a wash that never reached the screen. */
 .hero-scrim{
-  position:absolute;inset:0;z-index:-1;
+  position:absolute;inset:0;z-index:1;
   background:
     /* This frame is much darker than the last: the copy sits on bedding at
        rgb(134,133,126), luma 133, where the previous was 182. Navy manages
        only 3.85:1 unaided and slate 2.28.
 
-       The curve is weighted to where the copy is and then drops fast. A even
-       falloff left the lede at 4.59 and the note at 2.73, because the ends of
-       the lines sit further right than the block does, on much less wash. It
-       is clear by 47%, just before her hair starts at 44%, so the drop has to
-       be steep rather than gentle. */
-    linear-gradient(90deg, rgba(250,239,222,.8) 0%, rgba(250,239,222,.78) 28%,
-                           rgba(250,239,222,.66) 36%, rgba(250,239,222,.18) 42%,
-                           rgba(250,239,222,0) 47%),
+       The curve is weighted to where the copy is and then drops fast, because
+       the ends of the lines sit further right than the block does and an even
+       falloff left the lede at 4.59 and the note at 2.73.
+
+       In the 4K frame her hair starts at 38%, only two points past where the
+       headline ends. The wash therefore stops at the lede (33%) and is gone
+       by 39%. The headline can afford it: at 45px it needs 3:1, and it clears
+       that on the bare bedding without any wash at all. Only the lede and the
+       note, both small, actually depend on the scrim. */
+    linear-gradient(90deg, rgba(250,239,222,.8) 0%, rgba(250,239,222,.78) 26%,
+                           rgba(250,239,222,.72) 33%, rgba(250,239,222,.2) 36%,
+                           rgba(250,239,222,0) 39%),
     linear-gradient(0deg,  rgba(250,239,222,.24) 0%, rgba(250,239,222,.09) 20%,
                            rgba(250,239,222,0) 40%)
 }
@@ -337,8 +349,11 @@ section{padding-block:var(--gap)}
    rather than a change of taste. */
 .hero-stats{
   position:relative;isolation:isolate;
-  /* Tinted from this photograph: its light areas sample rgb(146,138,125),
-     R-G 8 and R-B 21, so nearly neutral where the last frame was warm.
+  /* Tinted from this photograph: the strip it sits over samples rgb(118,99,87),
+     R-G 19 and R-B 31. Warmer and darker than the frame before it, but the
+     composite lands in the same place: saturate(1.6) over this ground gives
+     rgb(208,193,179) against the old rgb(220,209,190), so the gradient below
+     is unchanged. Navy reads 8.13 on it and slate 4.81.
      Resample if the hero is swapped again. */
   background:linear-gradient(180deg,
     rgba(250,243,232,.72) 0%,
@@ -1397,7 +1412,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
          light, documentary skin: the bare face is un-retouched, which is what
          the page promises four sections down. Not lazy and high priority:
          it is the largest element above the fold. -->
-    <img src="hero-stayin.jpg" width="1920" height="1078" alt=""
+    <img src="hero-stayin.jpg" width="1920" height="1072" alt=""
          fetchpriority="high" decoding="async">
     <div class="hero-scrim"></div>
 
