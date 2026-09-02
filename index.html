@@ -287,11 +287,16 @@ section{padding-block:var(--gap)}
   background:
     /* This frame is much darker than the last: the copy sits on bedding at
        rgb(134,133,126), luma 133, where the previous was 182. Navy manages
-       only 3.85:1 unaided and slate 2.28. At .68 navy reads 9.13 and slate
-       5.40. Gone by 54% so both faces are untouched. */
-    linear-gradient(90deg, rgba(250,239,222,.68) 0%, rgba(250,239,222,.66) 24%,
-                           rgba(250,239,222,.5) 36%, rgba(250,239,222,.2) 46%,
-                           rgba(250,239,222,0) 54%),
+       only 3.85:1 unaided and slate 2.28.
+
+       The curve is weighted to where the copy is and then drops fast. A even
+       falloff left the lede at 4.59 and the note at 2.73, because the ends of
+       the lines sit further right than the block does, on much less wash. It
+       is clear by 47%, just before her hair starts at 44%, so the drop has to
+       be steep rather than gentle. */
+    linear-gradient(90deg, rgba(250,239,222,.8) 0%, rgba(250,239,222,.78) 28%,
+                           rgba(250,239,222,.66) 36%, rgba(250,239,222,.18) 42%,
+                           rgba(250,239,222,0) 47%),
     linear-gradient(0deg,  rgba(250,239,222,.24) 0%, rgba(250,239,222,.09) 20%,
                            rgba(250,239,222,0) 40%)
 }
@@ -1430,7 +1435,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
         <p class="lede">If your skin keeps reacting to products, adding stronger ones isn't always the answer. A weakened barrier can make even good ingredients feel irritating.</p>
         <p class="lede">A Skin Read shows you what your skin actually needs, so you can stop guessing and start treating it properly.</p>
         <p style="margin-top:1.75rem"><a class="btn" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a></p>
-        <p class="cta-note">Free &middot; 45 mins &middot; One-on-one at our studio</p>
+        <p class="cta-note" style="color:var(--slate)">Free &middot; 45 mins &middot; One-on-one at our studio</p>
       </div>
     </div>
 
