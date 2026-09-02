@@ -285,15 +285,15 @@ section{padding-block:var(--gap)}
 .hero-scrim{
   position:absolute;inset:0;z-index:-1;
   background:
-    /* Copy sits on linen at rgb(194,180,164). Navy clears 7.04:1 unaided but
-       slate lands at 4.17 and the rust eyebrow at 3.07. .66 is the floor that
-       carries rust (4.55); below it the eyebrow fails. Gone by 56% so the
-       faces are untouched. */
-    linear-gradient(90deg, rgba(250,239,222,.66) 0%, rgba(250,239,222,.64) 24%,
-                           rgba(250,239,222,.48) 38%, rgba(250,239,222,.18) 48%,
-                           rgba(250,239,222,0) 56%),
-    linear-gradient(0deg,  rgba(250,239,222,.26) 0%, rgba(250,239,222,.1) 20%,
-                           rgba(250,239,222,0) 42%)
+    /* This frame is much darker than the last: the copy sits on bedding at
+       rgb(134,133,126), luma 133, where the previous was 182. Navy manages
+       only 3.85:1 unaided and slate 2.28. At .68 navy reads 9.13 and slate
+       5.40. Gone by 54% so both faces are untouched. */
+    linear-gradient(90deg, rgba(250,239,222,.68) 0%, rgba(250,239,222,.66) 24%,
+                           rgba(250,239,222,.5) 36%, rgba(250,239,222,.2) 46%,
+                           rgba(250,239,222,0) 54%),
+    linear-gradient(0deg,  rgba(250,239,222,.24) 0%, rgba(250,239,222,.09) 20%,
+                           rgba(250,239,222,0) 40%)
 }
 .hero-inner{
   position:relative;width:100%;display:flex;flex-direction:column;
@@ -326,19 +326,19 @@ section{padding-block:var(--gap)}
      4. an angled sheen across the surface, so the highlight is a reflection
         rather than an even wash
 
-   An earlier frame had a luma-9 corner and forced .82 to keep the labels
-   legible. This one is bright edge to edge — 173 under the left of the bar,
-   163 under the right — so the same material can be genuinely transparent.
-   At .44 slate still reads 5.12:1. */
+   The ground under the bar is 115 at the left end and 139 at the right, dark
+   enough that slate fails below .62. At .66 it reads 5.02. The bar is less
+   transparent than the last frame allowed, and that is the picture's doing
+   rather than a change of taste. */
 .hero-stats{
   position:relative;isolation:isolate;
-  /* Tinted from this photograph: its light areas sample rgb(188,171,154),
-     R-G 17 and R-B 34, warmer than --cream. The stops lift that value rather
-     than borrowing the token. Resample if the hero is swapped again. */
+  /* Tinted from this photograph: its light areas sample rgb(146,138,125),
+     R-G 8 and R-B 21, so nearly neutral where the last frame was warm.
+     Resample if the hero is swapped again. */
   background:linear-gradient(180deg,
-    rgba(253,239,224,.52) 0%,
-    rgba(250,234,218,.44) 40%,
-    rgba(242,226,210,.5) 100%);
+    rgba(250,243,232,.72) 0%,
+    rgba(246,238,227,.66) 40%,
+    rgba(238,230,219,.7) 100%);
   -webkit-backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
   backdrop-filter:blur(40px) saturate(1.6) contrast(1.03);
   /* One rim, not two. A border-top at .85 plus an inset highlight at .92
@@ -1422,7 +1422,10 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   <div class="hero-inner">
     <div class="hero-pad">
       <div class="hero-copy">
-        <p class="eyebrow">Barrier first, everything else after.</p>
+        <!-- Navy, not rust. Rust reaches only 4.22:1 on this frame even with
+             the image lifted and a .66 wash over it, and small caps at 11px
+             need 4.5. Navy reads 9.13 on the same ground. -->
+        <p class="eyebrow" style="color:var(--navy)">Barrier first, everything else after.</p>
         <h1>Your skin isn't sensitive.<br>It's your barrier that's thin.</h1>
         <p class="lede">If your skin keeps reacting to products, adding stronger ones isn't always the answer. A weakened barrier can make even good ingredients feel irritating.</p>
         <p class="lede">A Skin Read shows you what your skin actually needs, so you can stop guessing and start treating it properly.</p>
