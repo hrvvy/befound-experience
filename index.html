@@ -130,12 +130,26 @@ section{padding-block:var(--gap)}
    hair. */
 /* Above the scrim, which now claims 1. */
 .asks{position:absolute;inset:0;z-index:2;pointer-events:none}
+
+/* Two elements per callout, because two things move it. The shell carries the
+   scroll travel, the pill inside carries the entrance and the idle drift. One
+   element cannot do both: they would each be writing transform, and the last
+   animation in the list would simply win. */
 .ask{
   position:absolute;left:var(--x);top:var(--y);
-  transform:translate(-50%,-50%);
-  font-family:var(--sans);font-size:clamp(.82rem,1vw,.98rem);
-  font-weight:600;letter-spacing:.01em;line-height:1.35;color:var(--cream);
-  padding:.62em 1.1em;border-radius:999px;
+  /* Written by the scroll handler. The defaults leave the chip exactly where
+     the markup puts it, so no script means no travel rather than no chip. */
+  --dx:0px;--dy:0px;--sc:1;
+  transform:translate(-50%,-50%) translate(var(--dx),var(--dy)) scale(var(--sc));
+  transform-origin:50% 50%;
+  white-space:nowrap;
+  will-change:transform,opacity
+}
+.ask-i{
+  display:inline-block;
+  font-family:var(--sans);font-size:clamp(1.02rem,1.45vw,1.4rem);
+  font-weight:600;letter-spacing:.005em;line-height:1.3;color:var(--cream);
+  padding:.66em 1.25em;border-radius:999px;
   background:rgba(12,27,48,.74);
   -webkit-backdrop-filter:blur(18px) saturate(125%);
   backdrop-filter:blur(18px) saturate(125%);
@@ -144,30 +158,28 @@ section{padding-block:var(--gap)}
 }
 
 /* At rest and visible by default, so a script failure leaves them readable. */
-.js .ask{opacity:0}
-.js .asks.in .ask{
+.js .ask-i{opacity:0}
+.js .asks.in .ask-i{
   animation:ask-in .75s var(--ease-out) forwards,
             ask-drift var(--dur) ease-in-out infinite
 }
 /* Deliberately mismatched periods. Equal durations make three objects bob in
    lockstep, which reads as a carousel rather than as air. */
-.ask{white-space:nowrap}
-
-.ask-a{--dur:7.3s;  animation-delay:.2s,  .95s}
-.ask-b{--dur:9.7s;  animation-delay:.45s, 1.2s}
-.ask-c{--dur:8.1s;  animation-delay:.7s,  1.45s}
+.ask-a{--dur:7.3s} .ask-a .ask-i{animation-delay:.2s,  .95s}
+.ask-b{--dur:9.7s} .ask-b .ask-i{animation-delay:.45s, 1.2s}
+.ask-c{--dur:8.1s} .ask-c .ask-i{animation-delay:.7s,  1.45s}
 
 @keyframes ask-in{
-  from{opacity:0;transform:translate(-50%,calc(-50% + 12px)) scale(.95)}
-  to  {opacity:1;transform:translate(-50%,-50%) scale(1)}
+  from{opacity:0;transform:translateY(12px) scale(.95)}
+  to  {opacity:1;transform:none}
 }
 @keyframes ask-drift{
-  0%,100%{transform:translate(-50%,-50%)}
-  50%    {transform:translate(-50%,calc(-50% - 6px))}
+  0%,100%{transform:translateY(0)}
+  50%    {transform:translateY(-6px)}
 }
 @media (prefers-reduced-motion:reduce){
-  .js .ask{opacity:1}
-  .js .asks.in .ask{animation:none}
+  .js .ask-i{opacity:1}
+  .js .asks.in .ask-i{animation:none}
 }
 
 /* ---------- nav ---------- */
@@ -293,24 +305,28 @@ section{padding-block:var(--gap)}
 .hero-scrim{
   position:absolute;inset:0;z-index:1;
   background:
-    /* This frame is much darker than the last: the copy sits on bedding at
-       rgb(134,133,126), luma 133, where the previous was 182. Navy manages
-       only 3.85:1 unaided and slate 2.28.
+    /* Radial, not a vertical band. A 90deg wash has to stop somewhere, and
+       wherever it stopped it drew a visible seam straight down the bedding —
+       steepening the falloff to spare her hair only made the seam harder. An
+       ellipse has no such edge: it fades in every direction at once.
 
-       The curve is weighted to where the copy is and then drops fast, because
-       the ends of the lines sit further right than the block does and an even
-       falloff left the lede at 4.59 and the note at 2.73.
+       Centred at -5% 50% with radii 80% x 95%: narrow across, and tall enough
+       that the whole left edge is covered at any viewport height. The height
+       matters because the copy does not sit at a fixed fraction of the hero —
+       the box is content-driven, so the eyebrow lands at y48% in a 1440x900
+       window and y18% in a 1100x660 one. An ellipse tuned to the first missed
+       the second entirely.
 
-       In the 4K frame her hair starts at 38%, only two points past where the
-       headline ends. The wash therefore stops at the lede (33%) and is gone
-       by 39%. The headline can afford it: at 45px it needs 3:1, and it clears
-       that on the bare bedding without any wash at all. Only the lede and the
-       note, both small, actually depend on the scrim. */
-    linear-gradient(90deg, rgba(250,239,222,.8) 0%, rgba(250,239,222,.78) 26%,
-                           rgba(250,239,222,.72) 33%, rgba(250,239,222,.2) 36%,
-                           rgba(250,239,222,0) 39%),
-    linear-gradient(0deg,  rgba(250,239,222,.24) 0%, rgba(250,239,222,.09) 20%,
-                           rgba(250,239,222,0) 40%)
+       Narrow across is what keeps it off her: she begins around x51% at every
+       width, because the crop is nearly a no-op at 43:24. */
+    radial-gradient(80% 120% at -5% 50%,
+      rgba(250,239,222,.82) 0%,  rgba(250,239,222,.70) 44%,
+      rgba(250,239,222,.42) 56%, rgba(250,239,222,.16) 66%,
+      rgba(250,239,222,.04) 76%, rgba(250,239,222,0)   86%),
+    /* A whisper along the bottom edge to soften the meeting with the stats
+       bar. Kept under .2 so it does not read as a second band. */
+    linear-gradient(0deg,  rgba(250,239,222,.18) 0%, rgba(250,239,222,.06) 18%,
+                           rgba(250,239,222,0) 36%)
 }
 .hero-inner{
   position:relative;width:100%;display:flex;flex-direction:column;
@@ -422,8 +438,20 @@ section{padding-block:var(--gap)}
    past roughly 70 characters gets genuinely harder to read, wide screen or not. */
 /* Capped as a share of the hero as well as in characters, so the lede tracks
    the film's clear zone instead of running out across the group on wide screens. */
+/* 33%, not 46%. The percentage is of the copy column, which is the full
+   padded width, so it sets where the longest line can end as a fraction of the
+   window — and that has to clear her. Her hair reaches image x44% at the height
+   the lede sits at, and the crop is close to a no-op at 43:24, so 46% put the
+   first line on rgb(27,23,18) at a 1100px window. 44ch still binds from about
+   1300px up, so nothing changes on a wide screen. */
+/* Navy, not the slate used for body copy elsewhere. Slate is a light enough
+   grey that on a photograph it tops out around 4.1:1 even under a .7 wash, and
+   the only way to lift it was to pour more cream over her hair. Navy reads the
+   same text at roughly 1.7x the contrast, which buys back enough headroom to
+   take the wash down instead of up. Hierarchy here comes from size and weight. */
 .hero .lede{
-  margin-top:1.25rem;max-width:min(44ch,46%);
+  color:var(--navy);
+  margin-top:1.25rem;max-width:min(44ch,33%);
   font-size:clamp(.96rem,.95vw,1.08rem);line-height:1.62
 }
 /* The diagnosis and the answer are two thoughts, so they get two blocks. The
@@ -1246,7 +1274,13 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
    760, 720, 600, 560, 520) now collapses on one of these two, so
    the page changes shape twice instead of ten times.
    ============================================================ */
-@media (max-width:900px){
+/* 1024, not 900. Everything else on the page stacks at 900, but the hero
+   gives out earlier: it is the one place where text is laid over a photograph,
+   and the copy needs the empty left third of the frame to itself. At 920px the
+   eyebrow already runs to x40% and the headline to x37%, over her hair, where
+   they measured 2.87 and 2.74 against floors of 4.5 and 3. No wash fixes that
+   without covering the picture. Stacked, both sit on clean cream. */
+@media (max-width:1024px){
   /* Hero: the film stops being a backdrop and becomes a block of its own,
      below the copy. Laying text over a 16:9 film only works while there is
      horizontal room for the empty left third; in a narrow column the subject
@@ -1304,7 +1338,10 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
     -webkit-backdrop-filter:none;backdrop-filter:none;
     border-top:1px solid var(--line)
   }
+}
 
+/* Everything below is layout that only gives out at 900. */
+@media (max-width:900px){
   /* one column */
   .villain-grid,.scan-grid,.founder,.stories-grid,.mins,.daphne,.ba-grid,.foot,.ledger{
     grid-template-columns:1fr
@@ -1421,9 +1458,9 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
          reachable by a screen reader, and it keeps the photograph a
          photograph. -->
     <div class="asks" aria-label="Questions a Skin Read answers">
-      <span class="ask ask-a" style="--x:46%;--y:10%">Am I lacking hydration?</span>
-      <span class="ask ask-b" style="--x:70%;--y:12%">Should I be doing that too?</span>
-      <span class="ask ask-c" style="--x:48%;--y:26%">Is my skin really that dry?</span>
+      <span class="ask ask-a" style="--x:44%;--y:11%"><span class="ask-i">Am I lacking hydration?</span></span>
+      <span class="ask ask-b" style="--x:71%;--y:14%"><span class="ask-i">Should I be doing that too?</span></span>
+      <span class="ask ask-c" style="--x:47%;--y:29%"><span class="ask-i">Is my skin really that dry?</span></span>
     </div>
 
     <!-- Her questions, in the band above the faces. HTML rather than burned
@@ -1450,7 +1487,7 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
         <p class="lede">If your skin keeps reacting to products, adding stronger ones isn't always the answer. A weakened barrier can make even good ingredients feel irritating.</p>
         <p class="lede">A Skin Read shows you what your skin actually needs, so you can stop guessing and start treating it properly.</p>
         <p style="margin-top:1.75rem"><a class="btn" href="#book">Get my Skin Read session <span class="arw">&rarr;</span></a></p>
-        <p class="cta-note" style="color:var(--slate)">Free &middot; 45 mins &middot; One-on-one at our studio</p>
+        <p class="cta-note" style="color:var(--navy)">Free &middot; 45 mins &middot; One-on-one at our studio</p>
       </div>
     </div>
 
@@ -2156,6 +2193,64 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   // them at rest and readable rather than invisible.
   var asks = document.querySelector('.asks');
   if(asks) requestAnimationFrame(function(){ asks.classList.add('in'); });
+
+  // As the hero scrolls away the questions converge on its middle, growing as
+  // they go, then fade. They are meant to read as the thought arriving rather
+  // than as three labels leaving.
+  //
+  // The travel is written to custom properties instead of to transform, so the
+  // pill inside keeps its own drift and entrance. Positions come from the --x
+  // and --y in the markup rather than from getBoundingClientRect: measuring an
+  // element you are transforming feeds its own output back in.
+  if(asks && !(window.matchMedia && matchMedia('(prefers-reduced-motion:reduce)').matches)){
+    var hero  = document.querySelector('.hero');
+    var chips = [].slice.call(asks.querySelectorAll('.ask'));
+    // A small head start each, so they do not fly in formation.
+    var lead  = [0, .10, .20];
+    // And slightly different destinations, so the three do not stack into one
+    // pill on the way out. They are near invisible by then, but three faint
+    // outlines on the same spot still read as a smudge.
+    var land  = [[-34,-20], [30, 8], [-8, 30]];
+    var queued = false;
+
+    function smooth(t){ return t * t * (3 - 2 * t); }
+
+    function place(){
+      queued = false;
+      if(!hero || getComputedStyle(asks).display === 'none') return;
+      var r = hero.getBoundingClientRect();
+      // Measured over the first 70% of the hero, so the questions have resolved
+      // before the section itself is gone.
+      var p  = Math.min(1, Math.max(0, -r.top / (r.height * .7)));
+      var cx = r.width / 2, cy = r.height / 2;
+
+      chips.forEach(function(el, i){
+        var d = lead[i] || 0;
+        var t = Math.min(1, Math.max(0, (p - d) / (1 - d)));
+        var e = smooth(t);
+        var ox = parseFloat(el.style.getPropertyValue('--x')) / 100 * r.width;
+        var oy = parseFloat(el.style.getPropertyValue('--y')) / 100 * r.height;
+        var to = land[i] || [0, 0];
+        el.style.setProperty('--dx', ((cx + to[0] - ox) * e).toFixed(1) + 'px');
+        el.style.setProperty('--dy', ((cy + to[1] - oy) * e).toFixed(1) + 'px');
+        el.style.setProperty('--sc', (1 + .95 * e).toFixed(3));
+        // Held at full opacity for the first half of the trip, so the growth is
+        // seen before the fade starts eating it.
+        var f = Math.min(1, Math.max(0, (e - .45) / .55));
+        el.style.opacity = (1 - smooth(f)).toFixed(3);
+      });
+    }
+
+    function onScroll(){
+      if(queued) return;
+      queued = true;
+      requestAnimationFrame(place);
+    }
+
+    addEventListener('scroll', onScroll, {passive:true});
+    addEventListener('resize', onScroll);
+    place();
+  }
 
   // Before / after sliders. The range input does the real work, so keyboard and
   // assistive tech are handled natively; this only mirrors its value onto the
