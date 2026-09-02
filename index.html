@@ -1040,9 +1040,13 @@ section{padding-block:var(--gap)}
   letter-spacing:.14em;text-transform:uppercase;color:var(--rust);
   line-height:1.5;min-height:3em;margin:0 0 .5rem
 }
+/* Two lines reserved, the same trick as .mins-when above it. Two of the three
+   titles wrap and one does not, so without a floor the bodies start 22px apart
+   and the bottom of the middle card sits high. 2.6em is two lines at 1.3. */
 .mins li h3{
   font-family:var(--sans);font-size:1.06rem;font-weight:700;
-  letter-spacing:0;line-height:1.3;color:var(--navy);margin:0 0 .6rem
+  letter-spacing:0;line-height:1.3;color:var(--navy);margin:0 0 .6rem;
+  min-height:2.6em
 }
 .mins li p:last-child{
   font-size:.97rem;line-height:1.6;color:var(--muted);margin:0;max-width:none
@@ -1443,6 +1447,11 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
   }
   .stories-grid{max-width:24rem;margin-inline:auto}
   .mins{max-width:34rem}
+  /* Both floors exist to start three cards at the same height beside each other.
+     In one column there is nothing to line up with and they are just a blank
+     line each — 22px under a title that does not wrap, and the same again under
+     two of the three eyebrows. */
+  .mins-when,.mins li h3{min-height:0}
   .daphne{max-width:34rem;margin-inline:auto}
   .foot{gap:2.4rem}
   .ledger{column-gap:0}
@@ -1912,8 +1921,8 @@ a:focus-visible,summary:focus-visible,.btn:focus-visible{
       </li>
       <li>
         <p class="mins-when">Minutes 30 to 45 &middot; What is possible</p>
-        <h3>Your path, mapped</h3>
-        <p>We map out where your skin could go from here and the path to get it there. Clear, honest, specific to your skin.</p>
+        <h3>Your path, and whether we are right for it</h3>
+        <p>We map out where your skin could realistically go and what it takes to get there. Then we are straight about whether BeFound is the right fit to take you. If it is not, we say so.</p>
       </li>
     </ol>
     <p class="mins-close">You leave knowing more about your skin than you ever have.</p>
